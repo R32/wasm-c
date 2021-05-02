@@ -1,7 +1,5 @@
 obj
-
+dump
+*.a
 *.js
 *.wasm
-
-
-dump

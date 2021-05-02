@@ -18,6 +18,10 @@ Win7x64 + cygwin(for gnu make)
 * wasm2wat.exe: (optional) [WebAssembly wabt]
 * haxe 4+
 
+### TODO
+
+* [ ] looking for an archive tool(like wasm-ar?) for `wasm-ld`
+
 [emscripten]:https://github.com/emscripten-core/emscripten
 [WebAssembly binaryen]:https://github.com/WebAssembly/binaryen
 [WebAssembly wabt]:https://github.com/WebAssembly/wabt

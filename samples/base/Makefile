@@ -67,4 +67,4 @@ vpath %.c c
 $(OBJDIR)/%.o: %.c
 	$(CC) $(CCFLAGS) $(CLANGFLAGS) -o $@ -c $<
 
-main.c: $(LIBC_BC)
+$(OBJDIR)/main.o: main.c

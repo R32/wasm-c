@@ -41,4 +41,4 @@ vpath %.c src
 $(OBJDIR)/%.o: %.c
 	$(CC) $(CCFLAGS) $(CLANGFLAGS) -o $@ -c $<
 
-ctype.c: ctype.h
+$(OBJDIR)/ctype.o: ctype.c ctype.h
