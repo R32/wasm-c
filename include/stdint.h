@@ -8,11 +8,10 @@
 // Types
 #if __x86_64__
   typedef long int   int64_t;
-  typedef long int   intptr_t;
 #else
   typedef long long  int64_t;
-  typedef int        intptr_t;
 #endif
+typedef long int     intptr_t;
 typedef char         int8_t;
 typedef short        int16_t;
 typedef int          int32_t;
@@ -28,11 +27,10 @@ typedef int64_t      int_least64_t;
 
 #if __x86_64__
   typedef unsigned long int   uint64_t;
-  typedef unsigned long int   uintptr_t;
 #else
   typedef unsigned long long  uint64_t;
-  typedef unsigned long       uintptr_t;
 #endif
+typedef unsigned long int     uintptr_t;
 typedef unsigned char         uint8_t;
 typedef unsigned short        uint16_t;
 typedef unsigned int          uint32_t;
@@ -45,7 +43,6 @@ typedef unsigned char         uint_least8_t;
 typedef unsigned short        uint_least16_t;
 typedef unsigned int          uint_least32_t;
 typedef          uint64_t     uint_least64_t;
-
 
 // Function-like macros
 #define INT8_C(c)        c
