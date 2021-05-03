@@ -15,7 +15,8 @@ all: $(OBJDIR) $(LIBDIR) $(TARGET)
 
 # libwasmc
 $(TARGET): $(OBJS)
-	$(AR) rcs $@ $^
+	@$(AR) rcs $@ $^
+	@echo Archived $@
 
 $(LIBDIR):
 	@mkdir -p $@
@@ -32,7 +33,7 @@ clean:
 CCFLAGS     := -Ofast -std=c99
 
 # Global compiler flags for Wasm targeting
-CLANGFLAGS  := $(INCLUDES) -target wasm32 -nostdinc++ -flto -D__EMSCRIPTEN__
+CLANGFLAGS  := $(INCLUDES) -target wasm32 -nostdinc++ -flto -D__EMSCRIPTEN__ -fshort-wchar
 CLANGFLAGS  += -fvisibility=hidden -fno-builtin -fno-exceptions -fno-threadsafe-statics
 
 # lower-case vpath
@@ -40,7 +41,8 @@ vpath %.h include
 vpath %.c src
 
 $(OBJDIR)/%.o: %.c
-	$(CC) $(CCFLAGS) $(CLANGFLAGS) -o $@ -c $<
+	@$(CC) $(CCFLAGS) $(CLANGFLAGS) -o $@ -c $<
+	@echo Compile $< TO $@
 
 $(OBJDIR)/ctype.o: ctype.c ctype.h
 $(OBJDIR)/errno.o: errno.c errno.h
