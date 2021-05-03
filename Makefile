@@ -6,7 +6,7 @@ AR        := $(WASMTOOLS)/llvm-ar.exe
 LIBDIR    := lib
 OBJDIR    := obj
 INCLUDES  := -Iinclude
-SOURCES   := ctype.c errno.c
+SOURCES   := ctype.c errno.c locale.c
 OBJS      := $(addprefix $(OBJDIR)/, $(SOURCES:.c=.o))
 TARGET    := $(LIBDIR)/libwasmc.a
 
@@ -44,3 +44,4 @@ $(OBJDIR)/%.o: %.c
 
 $(OBJDIR)/ctype.o: ctype.c ctype.h
 $(OBJDIR)/errno.o: errno.c errno.h
+$(OBJDIR)/locale.o: locale.c locale.h
