@@ -1,23 +1,24 @@
 # config your WASMTOOLS path
 WASMTOOLS ?= /cygdrive/e/SDKS/wasm
 CC        := $(WASMTOOLS)/clang.exe
-LD        := $(WASMTOOLS)/wasm-ld.exe
+AR        := $(WASMTOOLS)/llvm-ar.exe
 
-OUTDIR    := lib
+LIBDIR    := lib
 OBJDIR    := obj
 INCLUDES  := -Iinclude
 SOURCES   := ctype.c
 OBJS      := $(addprefix $(OBJDIR)/, $(SOURCES:.c=.o))
-TARGET    := $(OUTDIR)/wasm-libc.bc
+TARGET    := $(LIBDIR)/libwasmc.a
 
-# Flags for wasm-ld. 
-LDFLAGS   := --lto-O3
+# entry
+all: $(OBJDIR) $(LIBDIR) $(TARGET)
 
-all: $(OBJDIR) $(TARGET)
-
-# wasm-libc.bc
+# libwasmc
 $(TARGET): $(OBJS)
-	$(LD) $(LDFLAGS) -r -o $@ $^
+	$(AR) rcs $@ $^
+
+$(LIBDIR):
+	@mkdir -p $@
 
 $(OBJDIR):
 	@mkdir -p $@

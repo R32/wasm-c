@@ -25,9 +25,8 @@ OBJS      := $(addprefix $(OBJDIR)/, $(SOURCES:.c=.o))
 WASM      := $(OUTDIR)/app.wasm
 JS        := $(OUTDIR)/app.js
 
-LIBC_BC   := "$(LIBCROOT)/lib/wasm-libc.bc"
 # Flags for wasm-ld. 
-LDFLAGS   += $(LIBC_BC)
+LDFLAGS   += -L"$(LIBCROOT)/lib" -lwasmc
 LDFLAGS   += --no-entry --lto-O3
 LDFLAGS   += $(addprefix --export=, $(EXPORTS))
 
