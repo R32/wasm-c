@@ -6,75 +6,81 @@
 #define _MATH_H    1
 #include "_builtin.h"
 
-
 // Trigonometric functions
-// #define cos                 TODO
-// #define sin                 TODO
-// #define tan                 TODO
-// #define acos                TODO
-// #define asin                TODO
-// #define atan                TODO
-// #define atan2               TODO
+// #define cos(x)              TODO
+// #define sin(x)              TODO
+// #define tan(x)              TODO
+// #define acos(x)             TODO
+// #define asin(x)             TODO
+// #define atan(x)             TODO
+// #define atan2(x, y)         TODO
 
 // Hyperbolic functions
-// #define cosh                TODO
-// #define sinh                TODO
-// #define tanh                TODO
-// acosh                       c++11
-// asinh                       c++11
-// atanh                       c++11
+// #define cosh(x)             TODO
+// #define sinh(x)             TODO
+// #define tanh(x)             TODO
+// acosh(x)                    c++11
+// asinh(x)                    c++11
+// atanh(x)                    c++11
 
 // Exponential and logarithmic functions
-// #define exp                 TODO
-// #define frexp               TODO
-// #define ldexp               TODO
-// #define log                 TODO
-// #define log10               TODO
-// #define modf                TODO
-// #define modf                TODO
+// #define exp(x)              TODO
+// #define frexp(x, i)         TODO
+// #define ldexp(x, i)         TODO
+// #define log(x)              TODO
+// #define log10(x)            TODO
+// #define modf(x, y)          TODO
+// exp2(x)                     c++11
+// expm1(x)                    c++11
+// ilogb(x)                    c++11
+// log1p(x)                    c++11
+// log2(x)                     c++11
+// logb(x)                     c++11
+// scalbn(x, i)                c++11
+// scalbln(x, l)               c++11
 
 // Power functions
-// #define pow                 TODO
+// #define pow(x, y)           TODO
 #define sqrt(x)                __builtin_sqrt(x)
 #define sqrtf(x)               __builtin_sqrtf(x)
-// cbrt                        c++11
-// hypot                       c++11
+// cbrt(x)                     c++11
+// hypot(x, y)                 c++11
 
 // Error and gamma functions
-// erf                         c++11
-// erfc                        c++11
-// tgamma                      c++11
-// lgamma                      c++11
+// erf(x)                      c++11
+// erfc(x)                     c++11
+// tgamma(x)                   c++11
+// lgamma(x)                   c++11
 
 // Rounding and remainder functions
 #define ceil(x)                __builtin_ceil(x)
 #define ceilf(x)               __builtin_ceilf(x)
 #define floor(x)               __builtin_floor(x)
 #define floorf(x)              __builtin_floorf(x)
-// #define fmod                TODO
+// #define fmod(x, y)          TODO
 #define trunc(x)               __builtin_trunc(x)
 #define truncf(x)              __builtin_truncf(x)
-// round                       c++11
-// lround                      c++11
-// llround                     c++11
+// round(x)                    c++11
+// lround(x)                   c++11
+// llround(x)                  c++11
 #define rint(x)                __builtin_rint(x)
 #define rintf(x)               __builtin_rintf(x)
-// lrint                       c++11
-// llrint                      c++11
+// lrint(x)                    c++11
+// llrint(x)                   c++11
 #define nearbyint(x)           __builtin_nearbyint(x)
 #define nearbyintf(x)          __builtin_nearbyintf(x)
-// remainder                   c++11
-// remquo                      c++11
+// remainder(x, y)             c++11
+// remquo(x, y, pi)            c++11
 
 // Floating-point manipulation functions
 #define copysign(x, y)         __builtin_copysign(x, y)
 #define copysignf(x, y)        __builtin_copysignf(x, y)
-// nan                         c++11
-// nextafter                   c++11
-// nexttoward                  c++11
+// nan(pc)                     c++11
+// nextafter(x, y)             c++11
+// nexttoward(x, y)            c++11
 
 // Minimum, maximum, difference functions
-// fdim                        c++11
+// fdim(x, y)                  c++11
 #define fmax(x, y)             __builtin_wasm_max_f64(x, y)
 #define fmaxf(x, y)            __builtin_wasm_max_f32(x, y)
 #define fmin(x, y)             __builtin_wasm_min_f64(x, y)
@@ -84,10 +90,10 @@
 #define fabs(x)                __builtin_fabs(x)
 #define fabsf(x)               __builtin_fabsf(x)
 #define abs(x)                 __builtin_fabs(x)
-// fma                         c++11
+// fma(x, y, z)                c++11
 
 // Classification macro / functions
-// fpclassify                  c++11
+// fpclassify(x)               c++11
 #define isfinite(x)            __builtin_isfinite(x)
 #define isinf(x)               __builtin_isinf(x)
 #define isnan(x)               __builtin_isnan(x)
@@ -99,7 +105,7 @@
 #define isgreaterequal(x, y)   __builtin_isgreaterequal(x, y)
 #define isless(x, y)           __builtin_isless(x, y)
 #define islessequal(x, y)      __builtin_islessequal(x, y)
-#define islessgreater(x, y)    __builtin_ islessgreater(x, y)
+#define islessgreater(x, y)    __builtin_islessgreater(x, y)
 #define isunordered(x, y)      __builtin_isunordered(x, y)
 
 // Macro constants
