@@ -9,6 +9,14 @@ something about wasm
 
 [c-to-webassembly](https://surma.dev/things/c-to-webassembly/)
 
+[wasm instructions]
+
+[clang Basic TokenKinds.def]
+
+[clang Basic Builtins.def]
+
+[BuiltinsWebAssembly.def]
+
 ### Tools
 
 Win7x64 + cygwin(for gnu make)
@@ -21,7 +29,13 @@ Win7x64 + cygwin(for gnu make)
 ### TODO
 
 
+
+
 [emscripten]:https://github.com/emscripten-core/emscripten
 [WebAssembly binaryen]:https://github.com/WebAssembly/binaryen
 [WebAssembly wabt]:https://github.com/WebAssembly/wabt
 [the official LLVM releases page]:https://releases.llvm.org/download.html
+[wasm instructions]:https://webassembly.github.io/spec/core/appendix/index-instructions.html
+[BuiltinsWebAssembly.def]:https://github.com/llvm/llvm-project/blob/main/clang/include/clang/Basic/BuiltinsWebAssembly.def
+[clang Basic TokenKinds.def]:https://github.com/llvm/llvm-project/blob/main/clang/include/clang/Basic/TokenKinds.def
+[clang Basic Builtins.def]:https://github.com/llvm/llvm-project/blob/main/clang/include/clang/Basic/Builtins.def
