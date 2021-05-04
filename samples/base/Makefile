@@ -25,8 +25,7 @@ OBJS      := $(addprefix $(OBJDIR)/, $(SOURCES:.c=.o))
 WASM      := $(OUTDIR)/app.wasm
 JS        := $(OUTDIR)/app.js
 
-# Flags for wasm-ld. 
-LDFLAGS   += -L"$(LIBCROOT)/lib" -lwasmc
+# Flags for wasm-ld.
 LDFLAGS   += --no-entry --lto-O3
 LDFLAGS   += $(addprefix --export=, $(EXPORTS))
 
@@ -34,8 +33,10 @@ all: $(OBJDIR) $(JS)
 
 # wasm
 $(WASM): $(OBJS)
-	$(LD) $(LDFLAGS) -o $@ $^
-	$(OPT) $(OPTFLAGS) -o $@ $@
+	@$(LD) $(LDFLAGS) -o $@ $^
+	@echo Generate $@
+	@$(OPT) $(OPTFLAGS) -o $@ $@
+	@echo Optimize $@
 
 # js
 $(JS): $(WASM) build.hxml $(wildcard src/*.hx src/**/*.hx)
@@ -54,8 +55,7 @@ clean:
 CCFLAGS     := -Ofast -std=c99
 
 # Global compiler flags for Wasm targeting
-CLANGFLAGS  := -target wasm32 -nostdinc++ -flto
-CLANGFLAGS  += -D__EMSCRIPTEN__ -D_LIBCPP_ABI_VERSION=2
+CLANGFLAGS  := -target wasm32 -nostdinc++ -flto -D__EMSCRIPTEN__ -fshort-wchar
 CLANGFLAGS  += -fvisibility=hidden -fno-builtin -fno-exceptions -fno-threadsafe-statics
 CLANGFLAGS  += -isystem"$(LIBCROOT)/include"
 
@@ -64,6 +64,7 @@ vpath %.h c
 vpath %.c c
 
 $(OBJDIR)/%.o: %.c
-	$(CC) $(CCFLAGS) $(CLANGFLAGS) -o $@ -c $<
+	@$(CC) $(CCFLAGS) $(CLANGFLAGS) -o $@ -c $<
+	@echo Compile $< TO $@
 
 $(OBJDIR)/main.o: main.c
