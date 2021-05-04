@@ -23,17 +23,13 @@ Win7x64 + cygwin(for gnu make)
 
 * clang.exe, wasm-ld.exe, llvm-ar.exe: all of them are extracted from [the official LLVM releases page] by 7zip
 * wasm-opt.exe: [WebAssembly binaryen]
-* wasm2wat.exe: (optional) [WebAssembly wabt]
+* ~~wasm2wat.exe~~: run `wasm-opt --print file.wasm`
 * haxe 4+
 
 ### TODO
 
 
-
-
-[emscripten]:https://github.com/emscripten-core/emscripten
 [WebAssembly binaryen]:https://github.com/WebAssembly/binaryen
-[WebAssembly wabt]:https://github.com/WebAssembly/wabt
 [the official LLVM releases page]:https://releases.llvm.org/download.html
 [wasm instructions]:https://webassembly.github.io/spec/core/appendix/index-instructions.html
 [BuiltinsWebAssembly.def]:https://github.com/llvm/llvm-project/blob/main/clang/include/clang/Basic/BuiltinsWebAssembly.def
