@@ -157,5 +157,10 @@ EM_EXPORT(free) void free(void* ptr) {
 	if ((int)ptr < (int)&__data_end)
 		return;
 	struct tag* tag = container_of(ptr, struct tag, __data__);
-	freetag(tag);
+	// if tag is at the end of
+	if ((int)TAG_DATABPTR(tag) + TAG_DATASIZE(tag) == root.pos) {
+		root.pos -= TAG_DATASIZE(tag) + sizeof(struct tag);
+	} else {
+		freetag(tag);
+	}
 }
