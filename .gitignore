@@ -3,3 +3,7 @@ dump
 *.a
 *.js
 *.wasm
+*.def
+*.wat
+*.txt
+tmp.*
