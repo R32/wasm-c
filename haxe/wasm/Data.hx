@@ -1,8 +1,5 @@
 package wasm;
 
-import haxe.io.Input;
-import Sys.println;
-
 /**
  https://github.com/WebAssembly/design/blob/master/BinaryEncoding.md
 */

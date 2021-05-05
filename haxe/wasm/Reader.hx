@@ -103,7 +103,7 @@ class Reader {
 			if (u8 < 0x7F)
 				break;
 			if (step == (4 * 7))
-				return -1;
+				throw "readLEB";
 			step += 7;
 		}
 		return acc;

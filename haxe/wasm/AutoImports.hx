@@ -11,7 +11,7 @@ import wasm.Data;
 /*
  1. Reads import/export table from binary wasm file
 
- 2. Selects appropriate import field to initialize WebAssembly.Instance
+ 2. Picks the corresponding field to initialize WebAssembly.Instance
 
  **WIP**
 */
