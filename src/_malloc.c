@@ -118,8 +118,8 @@ Recalc:
 	return TAG_DATABPTR(tag);
 }
 
-EM_EXPORT(calloc) void* calloc(int size) {
-	size = sz_align(size);
+EM_EXPORT(calloc) void* calloc(int count, int elem) {
+	int size = sz_align(size * elem);
 	int* const ptr = malloc(size);
 	int*       end = ptr + size / sizeof(int);
 	while(--end >= ptr)
