@@ -11,6 +11,7 @@
 C_FUNCTION_BEGIN
 
 void* malloc(int size);
+void* calloc(int size);
 void* realloc(void* ptr, int size);
 void free(void* ptr);
 

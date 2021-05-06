@@ -108,7 +108,7 @@ Recalc:
 			root.max = memory_size();
 			goto Recalc;
 		}
-		// TODO: grow fail?
+		// If grow fails, the browser will throw an error.
 		memory_grow(GROW_EXTRA + ALIGN_POW2(diff, PAGE_SIZE) / PAGE_SIZE);
 		root.max = memory_size();
 	}
@@ -116,6 +116,15 @@ Recalc:
 	TAG_DATASIZE(tag) = size;
 	root.pos += fullsize;
 	return TAG_DATABPTR(tag);
+}
+
+EM_EXPORT(calloc) void* calloc(int size) {
+	size = sz_align(size);
+	int* const ptr = malloc(size);
+	int*       end = ptr + size / sizeof(int);
+	while(--end >= ptr)
+		*end = 0;
+	return ptr;
 }
 
 static inline void freetag(struct tag* tag) {
@@ -131,7 +140,7 @@ EM_EXPORT(realloc) void* realloc(void* ptr, int size) {
 	struct tag* tag = container_of(ptr, struct tag, __data__);
 	if (size <= TAG_DATASIZE(tag))
 		return ptr;
-	// detects if the tag is at the end of memory
+	// detects if the tag is at the end of the memory
 	if ((int)TAG_DATABPTR(tag) + TAG_DATASIZE(tag) == root.pos) {
 		int diff = (int)TAG_DATABPTR(tag) + size - root.max;
 		if (diff > 0) {
@@ -143,11 +152,11 @@ EM_EXPORT(realloc) void* realloc(void* ptr, int size) {
 		return ptr;
 	}
 	struct tag* new = malloc(size);
-	// memcpy, TODO: no idea why "__builtin_memcpy" doesn't work?
 	int* dst = (int*)TAG_DATABPTR(new);
 	int* src = (int*)TAG_DATABPTR(tag);
-	for(int i = 0, max = TAG_DATASIZE(tag) / sizeof(int); i < max; i++) {
-		*(dst + i) = *(src + i);
+	int* max = src + TAG_DATASIZE(tag) / sizeof(int);
+	while(src < max) {
+		*dst++ = *src++;
 	}
 	freetag(tag);
 	return TAG_DATABPTR(new);
