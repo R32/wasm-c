@@ -5,13 +5,11 @@ import js.lib.webassembly.Module;
 import js.lib.webassembly.Instance;
 import js.Browser.console;
 
+//@:eager
+typedef MyExports = wasm.TypedExports<"bin/app.wasm">;
+
 class Main {
-
-	static function proc( msg : Int, lparam : Int, wparam : Int ) : Int {
-		return 0;
-	}
-
-	static function dowasm() {
+	function new() {
 		var buffer = haxe.Resource.getBytes("wasm").getData();
 		if (!WebAssembly.validate(buffer))
 			return;
@@ -19,17 +17,17 @@ class Main {
 		var lib = new Instance(mod, {
 			env : {
 				log: function(a, b, c) {
-					console.log('pchar: $a, pword: $b, heapBase: $c');
+					console.log('a: $a, b: $b, c: $c');
 				}
 			}
 		});
-		var clib = lib.exports;
+		var clib : MyExports = cast lib.exports;
 		js.Lib.global.lib = clib;
-		trace(clib.test());
+		trace(clib.test(Math.PI));
 	}
 
 	static function main() {
-		wasm.AutoImports.readWASM( "bin/app.wasm" );
-		dowasm();
+		//wasm.Tools.getImports( "bin/app.wasm" );
+		new Main();
 	}
 }

@@ -5,12 +5,15 @@ import wasm.Data;
 
 class Reader {
 
-	var wasm : WASM;
+	public var wasm : WASM;
 
 	var src : Input;
 
-	public function new( r : Input ) {
+	public function new() {
 		wasm = new WASM();
+	}
+
+	public function run( r ) {
 		src = r;
 		readWASM();
 	}
@@ -23,10 +26,15 @@ class Reader {
 			var sec = new Section();
 			sec.id = cast readByte();
 			sec.bytes = readLEB();
-			println(sec);
 			sec.content = switch(sec.id) {
+			case SType:
+				readTypes();
 			case SImport:
 				readImportTable();
+			case SFunction:
+				readFuncIndexes();
+			case SMemory:
+				readMemInfo();
 			case SExport:
 				readExportTable();
 			default:
@@ -45,16 +53,15 @@ class Reader {
 			var kind : ExternalKind = cast readByte();
 			var info = switch(kind) {
 			case KFunction:
-				Index( readLEB() );
+				EIndex( readLEB() );
 			case KTable:
-				Table(cast readByte(), readReSizable());
+				ETable(cast readByte(), readReSizable());
 			case KMemory:
-				Memory(readReSizable());
+				EMemory(readReSizable());
 			case KGlobal:
-				Global(cast readByte(), readByte() == 1);
+				EGlobal(cast readByte(), readByte() == 1);
 			}
 			var entry = new ImportEntry(module, name, kind, info);
-			println("  " + entry);
 			acc.push(entry);
 		}
 		return Import(acc);
@@ -68,10 +75,47 @@ class Reader {
 			var kind : ExternalKind = cast readByte();
 			var index = readLEB();
 			var entry = new ExportEntry(name, kind, index);
-			println("  " + entry);
 			acc.push(entry);
 		}
 		return Export(acc);
+	}
+
+	function readTypes(){
+		var count = readLEB();
+		var acc = [];
+		for (i in 0...count) {
+			var form = readByte();
+			var paramCount = readLEB();
+			var paramTypes : Array<ValueType> = [];
+			for (j in 0...paramCount) {
+				paramTypes.push( cast readByte() );
+			}
+			var retCount = readByte();
+			var retType : ValueType = null;
+			if (retCount > 0)
+				retType = cast readByte();
+			var funcdef = new FuncDef(i, form, paramCount, paramTypes, retCount, retType);
+			acc.push(funcdef);
+		}
+		return Types(acc);
+	}
+
+	function readFuncIndexes() {
+		var count = readLEB();
+		var acc = [];
+		for (i in 0...count) {
+			acc.push(readLEB());
+		}
+		return Funcindexes(acc);
+	}
+
+	function readMemInfo(){
+		var count = readLEB();
+		var acc = [];
+		for (i in 0...count) {
+			acc.push( readReSizable() );
+		}
+		return Memory(acc);
 	}
 
 	function readTODO( bytes : Int ) {
@@ -107,11 +151,5 @@ class Reader {
 			step += 7;
 		}
 		return acc;
-	}
-
-	inline function println( s : Dynamic ) : Void {
-	#if 1
-		Sys.println(s);
-	#end
 	}
 }

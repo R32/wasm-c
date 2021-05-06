@@ -26,6 +26,13 @@ class WASM {
 		sections = [];
 	}
 
+	public function toString() {
+		var str = "";
+		for (sec in sections)
+			str += sec.toString();
+		return str;
+	}
+
 	static inline var SIGN = 'a'.code << 8 | 's'.code << 16 | 'm'.code << 24;
 }
 
@@ -46,21 +53,45 @@ class Section {
 	}
 
 	public function toString() {
-		return '$id, bytes: $bytes';
+		var str = '* $id [$bytes]\n';
+		if (content == null)
+			return str;
+		switch(content) {
+		case Types(a):
+			for (v in a)
+				str += "    " + v.toString() + "\n";
+		case Import(a):
+			for (v in a)
+				str += "    " + v.toString() + "\n";
+		case Funcindexes(a):
+			for (i in 0...a.length)
+				str += '    (func (${i + 1}) (type ${a[i]}))\n';
+		case Memory(a):
+			for (i in 0...a.length)
+				str += '    (memory ($i) (${a[i]}))\n';
+		case Export(a):
+			for (v in a)
+				str += "    " + v.toString() + "\n";
+		default:
+		}
+		return str;
 	}
 }
 
 enum Content {
-	TODO;    // Not yet recognized
-	Import(a : Array<ImportEntry>);
-	Export(a : Array<ExportEntry>);
+	TODO; // Not yet recognized
+	Types(t : Array<FuncDef>);
+	Import(i : Array<ImportEntry>);
+	Funcindexes(f : Array<Int>);      // (a[i] = TYPE IDX), ((i + 1) = FUNC IDX)
+	Memory(m : Array<ReSizable>);
+	Export(e : Array<ExportEntry>);
 }
 
 enum EntryInfo {
-	Index(idx : Int);                 // varuint32
-	Memory(limit : ReSizable);
-	Table(type : ElemType, limit : ReSizable);
-	Global(type : ValueType, mut : Bool);  // (varint7, varuint1)
+	EIndex(idx : Int);                // varuint32s
+	EMemory(limit : ReSizable);
+	ETable(type : ElemType, limit : ReSizable);
+	EGlobal(type : ValueType, mut : Bool);  // (varint7, varuint1)
 }
 
 /**
@@ -83,14 +114,16 @@ class ImportEntry {
 		this.info = info;
 	}
 
-	public function toString() return 'import "$module.$name" ($kind (${s_info(info)}))';
+	public function toString() {
+		return '(import "$module.$name" ($kind ${s_info(info)})';
+	}
 
 	static function s_info( e ) {
 		return switch(e) {
-		case Index(idx):          "" + idx;
-		case Memory(limit):       "" + limit;
-		case Table(type, limit):  "" + type + " " + limit;
-		case Global(type, mut):   "" + type + ", mut: " + mut;
+		case EIndex(idx):          'type($idx)';
+		case EMemory(limit):       "" + limit;
+		case ETable(type, limit):  "" + type + " " + limit;
+		case EGlobal(type, mut):   "" + type + ", mut: " + mut;
 		}
 	}
 }
@@ -113,6 +146,39 @@ class ExportEntry {
 	}
 
 	public function toString() return '(export "$name" ($kind ($index))';
+}
+
+/**
+ #func_type
+*/
+class FuncDef {
+
+	public var idx : Int;
+
+	public var form : Int;            // (varint7)
+
+	public var paramCount : Int;      // (varuint32)
+
+	public var paramTypes : Array<ValueType>;
+
+	public var returnCount : Int;     // (varuint1)
+
+	public var returnType : Null<ValueType>;
+
+	public function new(i, fm, pc, pt, rc, rt) {
+		idx = i;
+		form = fm; // aways 0x60;
+		paramCount  = pc;
+		paramTypes  = pt;
+		returnCount = rc;
+		returnType  = rt;
+	}
+
+	public function toString() {
+		var sparam = paramTypes.map( v -> v.toString() ).join(" ");
+		var sret = returnCount > 0 ? returnType.toString() : "void";
+		return '(type ($idx) (func ($sparam)) : $sret )';
+	}
 }
 
 enum abstract SId(Int) {
@@ -182,7 +248,7 @@ enum abstract ValueType(Int) {
 	var I32 = 0x7f;
 	var I64 = 0x7e;
 	var F32 = 0x7d;
-	var F64 = 0xfc;
+	var F64 = 0x7c;
 
 	public function toString() {
 		return switch(cast this) {
