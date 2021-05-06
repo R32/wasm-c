@@ -98,7 +98,7 @@ EM_EXPORT(malloc) void* malloc(int size) {
 	size = sz_align(size);
 	struct tag* tag = fl_get(size);
 	if (tag)
-		return tag;
+		return TAG_DATABPTR(tag);
 	int diff;
 	int fullsize = size + sizeof(struct tag);
 Recalc:
