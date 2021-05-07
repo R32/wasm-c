@@ -106,7 +106,21 @@ class Reader {
 		for (i in 0...count) {
 			acc.push(readLEB());
 		}
-		return Funcindexes(acc);
+		var start = 0;
+		for (sec in wasm.sections) {
+			switch(sec.content) {
+			case Import(a):
+				for (x in a) {
+					switch(x.kind) {
+					case KFunction:
+						start++;
+					default:
+					}
+				}
+			default:
+			}
+		}
+		return Funcindexes(acc, start);
 	}
 
 	function readMemInfo(){

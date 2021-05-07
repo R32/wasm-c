@@ -19,8 +19,8 @@ class TypedExports {
 
 	public function new() {
 		tmap = [
-			"f32" => macro :Int,
-			"f64" => macro :Float,
+			"i32"  => macro :Int,
+			"f64"  => macro :Float,
 			"void" => macro :Void
 		];
 	}
@@ -39,6 +39,7 @@ class TypedExports {
 		var exports = [];
 		var ctypes = [];
 		var funcs = [];
+		var extra = 0;
 		for (sec in wasm.sections) {
 			if (sec.content == null)
 				continue;
@@ -47,8 +48,9 @@ class TypedExports {
 				ctypes = ts.map(toFunKind);
 			case Export(a):
 				exports = a;
-			case Funcindexes(a):
+			case Funcindexes(a, x):
 				funcs = a;
+				extra = x;
 			default:
 			}
 		}
@@ -58,7 +60,7 @@ class TypedExports {
 		for (n in exports) {
 			var kind = switch(n.kind) {
 			case KFunction:
-				var idx = funcs[n.index - 1]; // see comment from enum Data.Content
+				var idx = funcs[n.index - extra];
 				FProp("default", "null", ctypes[idx]);
 			case KTable:
 				continue; // TODO: no idea

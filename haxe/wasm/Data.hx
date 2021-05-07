@@ -63,9 +63,9 @@ class Section {
 		case Import(a):
 			for (v in a)
 				str += "    " + v.toString() + "\n";
-		case Funcindexes(a):
+		case Funcindexes(a, start):
 			for (i in 0...a.length)
-				str += '    (func (${i + 1}) (type ${a[i]}))\n';
+				str += '    (func (${i + start}) (type ${a[i]}))\n';
 		case Memory(a):
 			for (i in 0...a.length)
 				str += '    (memory ($i) (${a[i]}))\n';
@@ -82,7 +82,7 @@ enum Content {
 	TODO; // Not yet recognized
 	Types(t : Array<FuncDef>);
 	Import(i : Array<ImportEntry>);
-	Funcindexes(f : Array<Int>);      // (a[i] = TYPE IDX), ((i + 1) = FUNC IDX)
+	Funcindexes(f : Array<Int>, start : Int);
 	Memory(m : Array<ReSizable>);
 	Export(e : Array<ExportEntry>);
 }
