@@ -8,8 +8,8 @@ import haxe.macro.Type;
 import StringTools.hex;
 import haxe.crypto.Crc32;
 import haxe.io.Bytes;
+import wasm.format.Data;
 import wasm.Tools;
-import wasm.Data;
 
 class TypedExports {
 

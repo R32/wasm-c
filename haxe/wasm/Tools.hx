@@ -4,8 +4,8 @@ package wasm;
 using haxe.macro.Tools;
 import haxe.macro.Expr;
 import haxe.macro.Context;
-import wasm.Reader;
-import wasm.Data;
+import wasm.format.Reader;
+import wasm.format.Data;
 #end
 
 class Tools {

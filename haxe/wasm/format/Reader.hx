@@ -1,7 +1,7 @@
-package wasm;
+package wasm.format;
 
 import haxe.io.Input;
-import wasm.Data;
+import wasm.format.Data;
 
 class Reader {
 

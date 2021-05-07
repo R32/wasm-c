@@ -1,4 +1,4 @@
-package wasm;
+package wasm.format;
 
 /**
  https://github.com/WebAssembly/design/blob/master/BinaryEncoding.md
