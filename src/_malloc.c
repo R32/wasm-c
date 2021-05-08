@@ -121,9 +121,13 @@ Recalc:
 EM_EXPORT(calloc) void* calloc(int count, int elem) {
 	int size = sz_align(size * elem);
 	int* const ptr = malloc(size);
-	int*       end = ptr + size / sizeof(int);
-	while(--end >= ptr)
-		*end = 0;
+	int*       end = ptr + (size / sizeof(int)) - 1;
+	while(end >= ptr) {
+		*end-- = 0;
+	#if (BLK_BASE >= 8)
+		*end-- = 0;
+	#endif
+	}
 	return ptr;
 }
 
@@ -157,6 +161,9 @@ EM_EXPORT(realloc) void* realloc(void* ptr, int size) {
 	int* max = src + TAG_DATASIZE(tag) / sizeof(int);
 	while(src < max) {
 		*dst++ = *src++;
+	#if (BLK_BASE >= 8)
+		*dst++ = *src++;
+	#endif
 	}
 	freetag(tag);
 	return TAG_DATABPTR(new);
