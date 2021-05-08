@@ -7,4 +7,5 @@
 #include "_builtin.h"
 
 
+// EM_IMPORT(now) time_t js_datenow();                     time.c
 #endif
