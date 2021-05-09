@@ -36,6 +36,9 @@ class TypedExports {
 
 	function getExports(e) : Array<Field> {
 		wasm = Tools.getWASM(e);
+	#if print_wasm
+		Sys.print(wasm.toString());
+	#end
 		var exports = [];
 		var ctypes = [];
 		var funcs = [];
@@ -61,13 +64,13 @@ class TypedExports {
 			var kind = switch(n.kind) {
 			case KFunction:
 				var idx = funcs[n.index - extra];
-				FProp("default", "null", ctypes[idx]);
+				FProp("default", "never", ctypes[idx]);
 			case KTable:
 				continue; // TODO: no idea
 			case KMemory:
-				FProp("default", "null", ctMemory);
+				FProp("default", "never", ctMemory);
 			case KGlobal:
-				FProp("default", "null", ctGlobal);
+				FProp("default", "never", ctGlobal);
 			}
 			fields.push({
 				name : n.name,
@@ -86,23 +89,45 @@ class TypedExports {
 			default:
 				Context.error("Class expected", pos);
 		}
-		var path = expr.getValue();
-		var clibs = Context.getType("js.wasm.CLib").getClass().fields.get();
-		var reserve = new Map<String,Bool>();
-		for (f in clibs) {
-			reserve.set(f.name, true);
+		var url = expr.getValue();
+		var hxclibs = Context.getType("js.wasm.CLib").getClass().fields.get();
+		var predefs = new Map<String, ClassField>();
+		for (f in hxclibs) {
+			predefs.set(f.name, f);
 		}
-		var cls = macro class extends js.wasm.CLib {};
-		cls.isExtern = true;
-		cls.name = "W" + hex(Crc32.make(Bytes.ofString(path)));
-		cls.pack = ["_wasm"];
-		cls.pos = expr.pos;
-		cls.fields = getExports(expr).filter( f -> !reserve.exists(f.name) );
-		var fullname = cls.pack[0] + "." + cls.name;
-		Context.defineModule(fullname, [cls]);
-		Context.registerModuleDependency(fullname, path);
+		var wasmfs = getExports(expr);
+		var fields = [];
+		for (f in wasmfs) {
+			var cf = predefs.get(f.name);
+			if (cf == null) {
+				fields.push( f );
+			} else {
+				fields.push( toField(cf) );
+			}
+		}
+		var path = new haxe.io.Path(url);
+		var cdef = {
+			isExtern : true,
+			pack : ["_wasm"],
+			name : "W" + path.file,
+			kind : TDClass(null, [], false, true, false),
+			pos  : expr.pos,
+			fields : fields,
+		};
+		var fullname = cdef.pack.join(".") + "." + cdef.name;
+		Context.defineModule(fullname, [cdef]);
+		Context.registerModuleDependency(fullname, url);
 		return Context.getType(fullname).toComplexType();
 	}
+
+	function toField( cf : ClassField ) : Field {
+		return {
+			name : cf.name,
+			kind: FProp("default", "null", cf.type.toComplexType()),
+			pos: cf.pos
+		}
+	}
+
 	public static function build() {
 		return new TypedExports().make();
 	}
