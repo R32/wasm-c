@@ -5,7 +5,7 @@
 #ifndef _FLOAT_H
 #define _FLOAT_H    1
 
-#define FLT_EVAL_METHOD      -1
+#define FLT_EVAL_METHOD      1
 #define DECIMAL_DIG          21
 /* Addition rounds to 0: zero, 1: nearest, 2: +inf, 3: -inf, -1: unknown */
 #define FLT_ROUNDS           1
