@@ -6,6 +6,7 @@
 #include "ctype.h"
 #include "_malloc.h"
 #include "math.h"
+#include "string.h"
 #include "WASM.h"
 
 EM_IMPORT(log) void log(int a, int b, int c);
@@ -22,8 +23,6 @@ int sumargs(int n, ...) {
 }
 
 EM_EXPORT(test) double arbitrary_name(double v) {
-	int* pi = malloc(sizeof(int) * 128);
-	log(1, sumargs(3, 1, 2, 3), (int)pi);
-	free(pi);
-	return sqrt((3.141592653589793) * v / 441000.);
+	log((int)"你好, 世界!", (int)L"你好, 世界!", (int)"hello world!");
+	return 1 * v / 441000.;
 }

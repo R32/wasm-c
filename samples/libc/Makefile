@@ -5,7 +5,8 @@ CXX       := $(WASMTOOLS)/clang -x c++
 LD        := $(WASMTOOLS)/wasm-ld
 OPT       := $(WASMTOOLS)/wasm-opt
 
-EXPORTS   :=
+# Force exports
+EXPORTS   := malloc
 LIBCROOT  ?= ../..
 BUILD     ?= RELEASE
 #########################

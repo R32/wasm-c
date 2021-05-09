@@ -1,0 +1,196 @@
+package js.wasm;
+
+import js.lib.DataView;
+import js.lib.webassembly.Module;
+import js.lib.webassembly.Memory;
+import js.lib.webassembly.Instance;
+
+@:native("_FMS")
+class FMS {
+
+	var cmem : Memory;
+
+	var view : DataView;
+
+	public function new() {
+	}
+
+	public function instance( mod : Module, imports : Dynamic ) : Instance {
+		if (imports.jproc == null)
+			imports.jproc = defProc;
+		var inst = new Instance(mod, imports);
+		var cmem : Memory = imports.memory;
+		if (cmem == null)
+			cmem = cast inst.exports.memory;
+		this.cmem = cmem;
+		this.view = new DataView(cmem.buffer);
+		CStub.select(cast inst.exports, this);
+		return inst;
+	}
+
+	inline function atostr(a) return js.Syntax.code("String.fromCharCode.apply(null, {0})", a);
+
+	public function readUTF8( ptr : Ptr, max : Int ) : String {
+		if (max < 0) {
+			max = view.byteLength;
+		} else {
+			max = ptr + max;
+		}
+		var a = [];
+		var i = 0;
+		var c, c2, c3, c4;
+		inline function CHAR(p) return view.getUint8(p);
+		while((ptr : Int) < max) {
+			c = CHAR(ptr++);
+			if (c < 0x80) {
+				if (c == 0)
+					break;
+			} else if (c < 0xE0) {
+				c2 = CHAR(ptr++);
+				if ((c2 & 0x80) == 0)
+					break;
+				c = ((c & 0x3F) << 6) | (c2 & 0x7F);
+			} else if (c < 0xF0) {
+				c2 = CHAR(ptr++);
+				c3 = CHAR(ptr++);
+				if ((c2 & c3 & 0x80) == 0)
+					break;
+				c = ((c & 0x1F) << 12) | ((c2 & 0x7F) << 6) | (c3 & 0x7F);
+			} else {
+				c2 = CHAR(ptr++);
+				c3 = CHAR(ptr++);
+				c4 = CHAR(ptr++);
+				if ((c2 & c3 & c4 & 0x80) == 0)
+					break;
+				c = ((c & 0x0F) << 18) | ((c2 & 0x7F) << 12) | ((c3 & 0x7F) << 6) | (c4 & 0x7F);
+				a.push((c >> 10) + 0xD7C0);
+				a.push((c & 0x3FF) + 0xDC00);
+				continue;
+			}
+			a.push(c);
+		}
+		return atostr(a);
+	}
+
+	public function readUCS2( ptr : Ptr, max : Int ) : String {
+		var a;
+		if (max < 0) {
+			max = view.byteLength;
+			a = [];
+		} else {
+			max = ptr + max;
+			a = js.Syntax.construct(Array, max);
+		}
+		var c;
+		while((ptr : Int) < max) {
+			c = view.getUint16(ptr, true);
+			if (c == 0)
+				break;
+			a.push(c);
+			ptr += 2;
+		}
+		return atostr(a);
+	}
+
+	inline function SCHAR(s, i) return StringTools.fastCodeAt(s, i);
+
+	public function writeUTF8( ptr : Ptr, max : Int, src : String ) : Int {
+		var c, j = 0, len = src.length;
+		var i : Int = ptr;
+		if (ptr == Ptr.NUL || max == 0) {
+			while(j < len) {
+				c = SCHAR(src, j++);
+				if (c < 0x80) {
+					if (c == 0)
+						break;
+					i++;
+				} else if (c < 0x800) {
+					i += 2;
+				} else if (c >= 0xD800 && c <= 0xDFFF) {
+					if (j == len)
+						break;
+					j++;
+					i += 4;
+				} else {
+					i += 3;
+				}
+			}
+			return i - ptr;
+		}
+		if (max < 0) {
+			max = view.byteLength;
+		} else {
+			max += ptr;
+		}
+		inline function BSET(p, v) view.setUint8(p, v);
+		while(j < len && i < max) {
+			c = SCHAR(src, j++);
+			if (c < 0x80) {
+				if (c == 0)
+					break;
+				BSET(i++, c);
+			} else if (c < 0x800) {
+				if (i + 1 < max)
+					break;
+				BSET(i++, 0xC0 | (c >> 6));
+				BSET(i++, 0x80 | (c & 63));
+			} else if (c >= 0xD800 && c <= 0xDFFF) {
+				if (j == len || i + 3 < max)
+					break;
+				c = (((c - 0xD800) << 10) | (SCHAR(src, j++) - 0xDC00)) + 0x10000;
+				BSET(i++, 0xF0 | ( c >> 18));
+				BSET(i++, 0x80 | ((c >> 12) & 63));
+				BSET(i++, 0x80 | ((c >>  6) & 63));
+				BSET(i++, 0x80 | ( c  & 63));
+			} else {
+				if (i + 2 < max)
+					break;
+				BSET(i++, 0xE0 | ( c >> 12));
+				BSET(i++, 0x80 | ((c >>  6) & 63));
+				BSET(i++, 0x80 | ( c  & 63));
+			}
+		}
+		if (i < max)
+			BSET(i, 0);
+		return i - ptr;
+	}
+
+	public function writeUCS2( ptr : Ptr, max : Int, src : String ) : Int {
+		var len = src.length;
+		if (ptr == Ptr.NUL || max == 0)
+			return len * 2;
+		if (max < 0) {
+			max = view.byteLength;
+		} else {
+			max += ptr;
+		}
+		var c, j = 0;
+		var i : Int = ptr;
+		while(j < len && (i + 1) < max) {
+			c = SCHAR(src, j++);
+			if (c == 0)
+				break;
+			this.view.setUint16(i, c, true);
+			i += 2;
+		}
+		if (i + 1 < max)
+			this.view.setUint16(i, 0, true);
+		return i - ptr;
+	}
+
+	public function defProc( msg : JMsg, lparam : Int, wparam : Int) : Int {
+		switch(msg) {
+		case J_ABORT:
+
+		case J_MEMGROW:
+			view = new DataView(cmem.buffer);
+		default:
+		}
+		return 0;
+	}
+}
+
+enum abstract JMsg(Int) {
+	var J_ABORT   = 9;
+	var J_MEMGROW = 10;
+}
