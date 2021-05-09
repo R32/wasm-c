@@ -14,22 +14,20 @@
 #define EXIT_SUCCESS                 0
 #define EXIT_FAILURE                 1
 #define RAND_MAX                     (0x7fffffff)
-#define atoi(s)                      atol(s)
 #define mblen(mbs, mb)               strnlen(mbs, len)
 #define mbstowcs(dst, src, mb)       u_towcs(dst, src, mb)
 #define wcstombs(dst, src, wc)       wcsto_u(dst, src, wc)
+#define atoi(s)                      atol(s)
+#define atof(str)                    strtod(str, NULL)
 
 C_FUNCTION_BEGIN
 // int wctomb (char* pmb, wchar_t wc);
 // int mbtowc (wchar_t* pwc, const char* pmb, size_t max);
 
-
 long int atol(const char *str);
+double strtod(const char* str, char** endptr);
 
-// double atof (const char* str);
-
-// double strtod (const char* str, char** endptr);
-// long int strtol (const char* str, char** endptr, int base);
+long int strtol (const char* str, char** endptr, int base);
 // unsigned long int strtoul (const char* str, char** endptr, int base);
 
 int rand (void);

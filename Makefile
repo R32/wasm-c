@@ -7,7 +7,7 @@ LIBDIR    := lib
 OBJDIR    := obj
 INCLUDES  := -Iinclude
 SOURCES   := ctype.c errno.c locale.c string.c time.c stdlib.c
-SOURCES   += _ucs2.c _malloc.c rand.c
+SOURCES   += _ucs2.c _malloc.c rand.c strtol.c
 OBJS      := $(addprefix $(OBJDIR)/, $(SOURCES:.c=.o))
 TARGET    := $(LIBDIR)/libwasmc.a
 
@@ -55,3 +55,4 @@ $(OBJDIR)/stdlib.o: stdlib.c stdlib.h
 $(OBJDIR)/_malloc.o: _malloc.c _malloc.h
 $(OBJDIR)/_ucs2.o: _ucs2.c _ucs2.h
 $(OBJDIR)/rand.o: rand.c
+$(OBJDIR)/strtol.o: strtol.c

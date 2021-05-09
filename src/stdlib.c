@@ -5,52 +5,53 @@
 #include "stdlib.h"
 #include "ctype.h"
 #include "string.h"
+#include "math.h"
 
-/*
-double strtod (const char* s, char** endptr) {
-	int neg = 0;
+/**
+ simple strtod
+*/
+double strtod (const char* restrict s, char** restrict endptr) {
 	while(isspace(*s))
 		s++;
+	int neg = 0;
 	switch (*s) {
 	case '-': neg = 1;
 	case '+': s++;
 	}
-	
-	while(*s) {
-		switch(*s++) {
-		case '0':
-			break;
-		case '1':
-			break;
-		case '2':
-			break;
-		case '3':
-			break;
-		case '4':
-			break;
-		case '5':
-			break;
-		case '6':
-			break;
-		case '7':
-			break;
-		case '8':
-			break;
-		case '9':
-			break;
-		case '.':
-			break;
-		case 'E':
-		case 'e':
-			break;
-		default:
+	double value = 0.;
+	while (isdigit(*s))
+		value = value * 10.0 + (*s++ - '0');
+	if (*s == '.') {
+		s++;
+		double fract = 1.;
+		while(isdigit(*s)) {
+			fract *= 0.1;
+			value += (double)(*s++ - '0') * fract;
 		}
 	}
-	return 0.;
+	if (*s == 'e' || *s == 'E') {
+		s++;
+		int exp = 0;
+		double fract = 10.;
+		switch(*s) {
+		case '-': fract = 0.1;
+		case '+': s++;
+		}
+		while(isdigit(*s))
+			exp = 10 * exp + (*s++ - '0');
+		while(1) {
+			if (exp & 1)
+				value *= fract;
+			if (!(exp >>= 1))
+				break;
+			fract *= fract;
+		}
+	}
+	if (*s == 'f' || *s == 'F' || *s == 'l' || *s == 'L')
+		s++;
+	if (endptr) *endptr = (char*)s;
+	return neg ? -value : value;
 }
-*/
-
-// double atof(const char* s) { return strtod(s, NULL); }
 
 long atol(const char* s) {
 	long n = 0;
@@ -97,11 +98,11 @@ static void inline st_swap(void* a, void* b, void* t, size_t size) {
 	memcpy(a, b, size);
 	memcpy(b, t, size);
 }
-/** 
- This function takes last element as pivot, 
- places the pivot element at its correct position in sorted array, 
- and places all smaller (smaller than pivot) to left of pivot 
- and all greater elements to right of pivot 
+/**
+ This function takes last element as pivot,
+ places the pivot element at its correct position in sorted array,
+ and places all smaller (smaller than pivot) to left of pivot
+ and all greater elements to right of pivot
 */
 static int st_partition(void* base, int low, int high, size_t size, compar cmp) {
 	char t[size];
@@ -128,12 +129,10 @@ static void st_inner(void* base, int low, int high, size_t size, compar cmp) {
 }
 /**
  Copied from https://www.geeksforgeeks.org/quick-sort/
- 
+
  Maybe we can move `size` and `cmp` out as STATIC to reduce stack data
  which will prevent stack overflow as much as possible
 */
 void qsort(void* base, size_t num, size_t size, compar cmp) {
 	st_inner(base, 0, num - 1, size, cmp);
 }
-
-
