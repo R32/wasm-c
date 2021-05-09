@@ -91,6 +91,8 @@ void* bsearch (const void* key, const void* base, size_t num, size_t size, compa
 #define BIS(i)        ((char*)base + (i) * size)
 #define BISCMP(x, y)  cmp(BIS(x), BIS(y))
 static void inline st_swap(void* a, void* b, void* t, size_t size) {
+	if (a == b)
+		return;
 	memcpy(t, a, size);
 	memcpy(a, b, size);
 	memcpy(b, t, size);
