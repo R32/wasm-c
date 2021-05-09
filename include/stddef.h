@@ -21,4 +21,8 @@
     const __typeof__(((type *)0)->member) * __mptr = (ptr);\
     (type *)((char *)ptr - offsetof(type, member)); })
 
+#ifndef ARRRYSIZE
+#  define ARRRYSIZE(a)         (sizeof(a) / sizeof((a)[0]))
+#endif
+
 #endif
