@@ -6,6 +6,137 @@
 #define _MATH_H    1
 #include "_builtin.h"
 
+
+#ifdef OPENLIBM
+// https://github.com/JuliaMath/openlibm
+
+// Trigonometric functions
+double cos(double x);
+double sin(double x);
+double tan(double x);
+double acos(double x);
+double asin(double x);
+double atan(double x);
+double atan2(double x, double y);
+float  cosf(float x);
+float  sinf(float x);
+float  tanf(float x);
+float  acosf(float x);
+float  asinf(float x);
+float  atanf(float x);
+float  atan2f(float x, float y);
+
+// Hyperbolic functions
+double cosh(double x);
+double sinh(double x);
+double tanh(double x);
+double acosh(double x);
+double asinh(double x);
+double atanh(double x);
+float  coshf(float x);
+float  sinhf(float x);
+float  tanhf(float x);
+float  acoshf(float x);
+float  asinhf(float x);
+float  atanhf(float x);
+
+// Exponential and logarithmic functions
+double exp(double x);
+double frexp(double x, int i);
+double ldexp(double x, int i);
+double log(double x);
+double log10(double x);
+double modf(double x, double y);
+double exp2(double x);
+double expm1(double x);
+double ilogb(double x);
+double log1p(double x);
+double log2(double x);
+double logb(double x);
+double scalbn(double x, int i);
+double scalbln(double x, int l);
+
+float  expf(float x);
+float  frexpf(float x, int i);
+float  ldexpf(float x, int i);
+float  logf(float x);
+float  log10f(float x);
+float  modff(float x, float y);
+float  exp2f(float x);
+float  expm1f(float x);
+float  ilogbf(float x);
+float  log1pf(float x);
+float  log2f(float x);
+float  logbf(float x);
+float  scalbnf(float x, int i);
+float  scalblnf(float x, int l);
+
+// Power functions
+// #define sqrt(x)                __builtin_sqrt(x)
+// #define sqrtf(x)               __builtin_sqrtf(x)
+double pow(double x, double y);
+double cbrt(double x);
+double hypot(double x, double y);
+float  powf(float x, float y);
+float  cbrtf(float x);
+float  hypotf(float x, float y);
+
+// Error and gamma functions
+double erf(double x);
+double erfc(double x);
+double tgamma(double x);
+double lgamma(double x);
+float  erff(float x);
+float  erfcf(float x);
+float  tgammaf(float x);
+float  lgammaf(float x);
+
+// Rounding and remainder functions
+// #define ceil(x)                __builtin_ceil(x)
+// #define ceilf(x)               __builtin_ceilf(x)
+// #define floor(x)               __builtin_floor(x)
+// #define floorf(x)              __builtin_floorf(x)
+// #define trunc(x)               __builtin_trunc(x)
+// #define truncf(x)              __builtin_truncf(x)
+// #define rint(x)                __builtin_rint(x)
+// #define rintf(x)               __builtin_rintf(x)
+// #define nearbyint(x)           __builtin_nearbyint(x)
+// #define nearbyintf(x)          __builtin_nearbyintf(x)
+double fmod(double x, double y);
+double round(double x);
+double lround(double x);
+double llround(double x);
+double lrint(double x);
+double llrint(double x);
+double remainder(double x, double y);
+double remquo(double x, double y, int* quot);
+float  fmodf(float x, float y);
+float  roundf(float x);
+float  lroundf(float x);
+float  llroundf(float x);
+float  lrintf(float x);
+float  llrintf(float x);
+float  remainderf(float x, float y);
+float  remquof(float x, float y, int* quot);
+
+// Floating-point manipulation functions
+// #define copysign(x, y)         __builtin_copysign(x, y)
+// #define copysignf(x, y)        __builtin_copysignf(x, y)
+double nan(const char* tag);
+double nextafter(double x, double y);
+double nexttoward(double x, long double y);
+float	nanf(const char* tag);
+float  nextafterf(float x, float y);
+float  nexttowardf(float x, long double y);
+
+// Others
+double fma(double x, double y, double z);
+float  fmaf(float x, float y, float z);
+
+#endif
+
+
+
 // Trigonometric functions
 // #define cos(x)              TODO
 // #define sin(x)              TODO
