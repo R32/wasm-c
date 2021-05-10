@@ -9,7 +9,7 @@
 #include "string.h"
 #include "WASM.h"
 
-EM_IMPORT(log) void log(int a, int b, int c);
+EM_IMPORT(log) void jslog(double a, double b, double c);
 
 int sumargs(int n, ...) {
 	int count = 0;
@@ -23,6 +23,6 @@ int sumargs(int n, ...) {
 }
 
 EM_EXPORT(test) double arbitrary_name(double v) {
-	log((int)"你好, 世界!", (int)L"你好, 世界!", (int)"hello world!");
-	return 1 * v / 441000.;
+	jslog((int)"你好, 世界!", (int)L"你好, 世界!", (int)"hello world!");
+	return sqrt(v);
 }

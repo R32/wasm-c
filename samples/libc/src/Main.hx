@@ -16,21 +16,20 @@ class Main {
 		var buffer = haxe.Resource.getBytes("wasm").getData();
 		if (!WebAssembly.validate(buffer))
 			return;
-		var mod = new Module(buffer);
-		var fms = new FMS();
-		var inst = fms.instance(mod, {
+		var imports = {
 			env : {
-				log: function(a, b, c) {
+				log : function(a, b, c) {
 					trace("UTF8: " + CStub.fms.readUTF8(a, -1));
 					trace("UCS2: " + CStub.fms.readUCS2(b, -1));
 					trace("UCS8: " + CStub.fms.readUTF8(c, -1));
 					trace(a, b, c);
-				},
-				sin: Math.sin,
+				}
 			}
+		};
+		FMS.init(buffer, imports).then(function(moi) {
+			var clib : MyExports = cast moi.instance.exports;
+			trace(clib.test(Math.PI / (180 / 60)));
 		});
-		var clib : MyExports = cast inst.exports;
-		trace(clib.test(16));
 	}
 
 	static function main() {

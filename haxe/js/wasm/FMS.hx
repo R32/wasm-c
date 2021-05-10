@@ -1,9 +1,9 @@
 package js.wasm;
 
 import js.lib.DataView;
-import js.lib.webassembly.Module;
+import js.lib.WebAssembly;
+import js.lib.ArrayBuffer;
 import js.lib.webassembly.Memory;
-import js.lib.webassembly.Instance;
 
 @:native("_FMS")
 class FMS {
@@ -12,20 +12,24 @@ class FMS {
 
 	var view : DataView;
 
-	public function new() {
+	function new( imports : Dynamic ) {
+		this.cmem = imports.memory;
+		if (imports.jproc == null)
+			imports.jproc = this.defProc;
 	}
 
-	public function instance( mod : Module, imports : Dynamic ) : Instance {
-		if (imports.jproc == null)
-			imports.jproc = defProc;
-		var inst = new Instance(mod, imports);
-		var cmem : Memory = imports.memory;
-		if (cmem == null)
-			cmem = cast inst.exports.memory;
-		this.cmem = cmem;
-		this.view = new DataView(cmem.buffer);
-		CStub.select(cast inst.exports, this);
-		return inst;
+	static public function init( buf : ArrayBuffer, imports : Dynamic ) {
+		if (js.Syntax.typeof(CStub.fms) != "undefined")
+			throw new js.lib.Error("single instance only");
+		var fms = new FMS(imports);
+		return WebAssembly.instantiate(buf, imports).then(function( moi ) {
+			var inst = moi.instance;
+			if (fms.cmem == null)
+				fms.cmem = cast inst.exports.memory;
+			fms.view = new DataView(fms.cmem.buffer);
+			CStub.select(cast inst.exports, fms);
+			return moi;
+		});
 	}
 
 	inline function atostr(a) return js.Syntax.code("String.fromCharCode.apply(null, {0})", a);
@@ -181,7 +185,6 @@ class FMS {
 	public function defProc( msg : JMsg, lparam : Int, wparam : Int) : Int {
 		switch(msg) {
 		case J_ABORT:
-
 		case J_MEMGROW:
 			view = new DataView(cmem.buffer);
 		default:
