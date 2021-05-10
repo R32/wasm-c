@@ -55,12 +55,12 @@ clean:
 .PHONY: clean all
 
 # Global compiler flags
-# CXXFLAGS    := -Ofast -std=c++11 -fno-rtti -Wno-writable-strings -Wno-unknown-pragmas
-CCFLAGS     := -Ofast -std=c99 -DOPENLIBM
+# CXXFLAGS    := -Ofast -std=c++11 -nostdinc++ -fno-rtti -Wno-writable-strings -Wno-unknown-pragmas
+CCFLAGS     := -Ofast -std=c99 -nostdinc
 
 # Global compiler flags for Wasm targeting
-CLANGFLAGS  := -target wasm32 -nostdinc++ -flto -fshort-wchar -D__EMSCRIPTEN__
-CLANGFLAGS  += -fvisibility=hidden -fno-builtin -fno-exceptions -fno-threadsafe-statics
+CLANGFLAGS  := -target wasm32 -flto -fshort-wchar -D__EMSCRIPTEN__ -DOPENLIBM
+CLANGFLAGS  += -fvisibility=hidden -fno-builtin -nostdlib -fno-exceptions -fno-threadsafe-statics
 CLANGFLAGS  += -isystem"$(LIBCROOT)/include"
 
 # lower-case vpath
