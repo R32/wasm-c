@@ -148,11 +148,11 @@ extern const union __nan_un {
 ////					((x) > (y) || (y) > (x)))
 ////#define	isunordered(x, y)	(isnan(x) || isnan(y))
 ////#endif /* __MATH_BUILTIN_RELOPS */
-
-#define	signbit(x)					\
-    ((sizeof (x) == sizeof (float)) ? __signbitf(x)	\
-    : (sizeof (x) == sizeof (double)) ? __signbit(x)	\
-    : __signbitl(x))
+#define signbit(x)             __builtin_signbit(x)
+////#define	signbit(x)					\
+////    ((sizeof (x) == sizeof (float)) ? __signbitf(x)	\
+////    : (sizeof (x) == sizeof (double)) ? __signbit(x)	\
+////    : __signbitl(x))
 
 //VBS
 //typedef	__double_t	double_t;
