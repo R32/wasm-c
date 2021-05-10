@@ -27,7 +27,9 @@ WASM      := $(OUTDIR)/app.wasm
 JS        := $(OUTDIR)/app.js
 
 # Flags for wasm-ld.
-LDFLAGS   += -L"$(LIBCROOT)/lib" -lwasmc
+# --initial-memory=$$((1024*64*12))
+# -z stack-size=$$((1024*64*8))
+LDFLAGS   += -L"$(LIBCROOT)/lib" -lwasmc -lopenlibm
 LDFLAGS   += --no-entry --lto-O3
 LDFLAGS   += $(addprefix --export=, $(EXPORTS))
 
@@ -54,7 +56,7 @@ clean:
 
 # Global compiler flags
 # CXXFLAGS    := -Ofast -std=c++11 -fno-rtti -Wno-writable-strings -Wno-unknown-pragmas
-CCFLAGS     := -Ofast -std=c99
+CCFLAGS     := -Ofast -std=c99 -DOPENLIBM
 
 # Global compiler flags for Wasm targeting
 CLANGFLAGS  := -target wasm32 -nostdinc++ -flto -fshort-wchar -D__EMSCRIPTEN__
