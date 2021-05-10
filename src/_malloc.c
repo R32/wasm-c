@@ -7,7 +7,6 @@
 #include "_malloc.h"
 #include "stddef.h"
 
-extern const int __data_end;
 extern const int __heap_base;
 
 #define PAGE_SIZE         (1024 * 64)
@@ -138,7 +137,7 @@ static inline void freetag(struct tag* tag) {
 }
 
 EM_EXPORT(realloc) void* realloc(void* ptr, int size) {
-	if ((int)ptr < (int)&__data_end)
+	if ((int)ptr < (int)&__heap_base)
 		return ptr;
 	size = sz_align(size);
 	struct tag* tag = container_of(ptr, struct tag, __data__);
@@ -170,7 +169,7 @@ EM_EXPORT(realloc) void* realloc(void* ptr, int size) {
 }
 
 EM_EXPORT(free) void free(void* ptr) {
-	if ((int)ptr < (int)&__data_end)
+	if ((int)ptr < (int)&__heap_base)
 		return;
 	struct tag* tag = container_of(ptr, struct tag, __data__);
 	// if tag is at the end of
