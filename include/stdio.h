@@ -4,9 +4,15 @@
 
 #ifndef _STDIO_H
 #define _STDIO_H    1
-#include "_cdefs.h"
+#include "stddef.h"
+#include "_javascript_call.h"
 
-C_FUNCTION_BEGIN
 
-C_FUNCTION_END
+#define EOF              (-1)
+#define BUFSIZ           1024
+#define FILENAME_MAX     512
+#define putchar(c)       js_sendmessage(J_PUTCHAR, c, 0)
+
+// printf.c
+#include "printf.h"
 #endif

@@ -7,5 +7,6 @@
 #include "_builtin.h"
 
 
-// EM_IMPORT(now) time_t js_datenow();                     time.c
+// EM_IMPORT(now)     time_t js_datenow();                     time.c
+// EM_IMPORT(jproc)   int js_sendmessage(int, int, int);       _javascript_call.js
 #endif

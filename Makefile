@@ -8,7 +8,7 @@ OBJDIR    := obj
 INCLUDES  := -Iinclude
 SOURCES   := ctype.c errno.c locale.c string.c time.c stdlib.c
 SOURCES   += _ucs2.c _malloc.c rand.c strtol.c
-SOURCES   += printf.c
+SOURCES   += stdio.c printf.c
 OBJS      := $(addprefix $(OBJDIR)/, $(SOURCES:.c=.o))
 TARGET    := $(LIBDIR)/libwasmc.a
 
@@ -58,4 +58,5 @@ $(OBJDIR)/_ucs2.o: _ucs2.c _ucs2.h
 $(OBJDIR)/rand.o: rand.c
 $(OBJDIR)/strtol.o: strtol.c
 #stdio
+$(OBJDIR)/stdio.o: stdio.c stdio.h
 $(OBJDIR)/printf.o: printf.c printf.h stdarg.h stddef.h stdint.h stdbool.h

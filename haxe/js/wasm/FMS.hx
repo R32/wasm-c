@@ -12,10 +12,14 @@ class FMS {
 
 	var view : DataView;
 
+	var output : js.html.DivElement;
+
 	function new( imports : Dynamic ) {
-		this.cmem = imports.memory;
-		if (imports.jproc == null)
-			imports.jproc = this.defProc;
+		if (imports.env == null)
+			imports.env = {};
+		this.cmem = imports.env.memory;
+		if (imports.env.jproc == null)
+			imports.env.jproc = this.defProc;
 	}
 
 	static public function init( buf : ArrayBuffer, imports : Dynamic ) {
@@ -182,18 +186,55 @@ class FMS {
 		return i - ptr;
 	}
 
-	public function defProc( msg : JMsg, lparam : Int, wparam : Int) : Int {
+	function defProc( msg : JMsg, wparam : Int, lparam : Int) : Int {
 		switch(msg) {
+		case J_ASSERT if (wparam >= 1024):
+			var s = "FILE: " + this.readUTF8(cast wparam, -1) + ", LINE: " + lparam;
+			throw new js.lib.Error(s);
 		case J_ABORT:
+			throw new js.lib.Error("" + wparam);
 		case J_MEMGROW:
 			view = new DataView(cmem.buffer);
+		case J_PUTCHAR:
+			putchar(wparam);
 		default:
 		}
 		return 0;
 	}
+
+	function putchar( c ) {
+	#if !no_putchar
+		if (output == null) {
+			var id = "wasm_cout";
+			var doc = js.Browser.document;
+			output = cast doc.querySelector("#" + id);
+			if (output == null) {
+				output = cast doc.createElement("div");
+				output.setAttribute("id", id);
+				var style = output.style;
+				style.position = "fixed";
+				style.left = "5%";
+				style.right = "5%";
+				style.bottom = "0";
+				style.border = "#999999 1px solid";
+				style.minWidth = "600px";
+				style.height = "126px";
+				style.whiteSpace = "pre";
+				style.fontSize = "87.5%";
+				style.fontFamily = "consolas";
+				style.backgroundColor = "#efefef";
+				style.overflowY = "auto";
+				doc.body.appendChild(output);
+			}
+		}
+		output.innerText += String.fromCharCode(c);
+	#end
+	}
 }
 
-enum abstract JMsg(Int) {
-	var J_ABORT   = 9;
-	var J_MEMGROW = 10;
+extern enum abstract JMsg(Int) {
+	var J_ASSERT  = 9;
+	var J_ABORT   = 10;
+	var J_MEMGROW = 11;
+	var J_PUTCHAR = 12;
 }

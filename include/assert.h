@@ -4,13 +4,14 @@
 
 #ifndef _ASSERT_H
 #define _ASSERT_H    1
+#include "_javascript_call.h"
 
 #ifdef NDEBUG
 #  define assert(e)    ((void)0)
 #  define _assert(e)   ((void)0)
 #else
 #  define _assert(e)   assert(e)
-#  define assert(e)    ((e) ? ((void)0) : TODO(__FILE__, __LINE__, #e))
+#  define assert(e)    ((e) ? ((void)0) : js_sendmessage(J_ABORT, (int)__FILE__, __LINE__))
 #endif
 
 #endif
