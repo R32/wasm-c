@@ -20,18 +20,18 @@ C_FUNCTION_BEGIN
 // long int wcstol (const wchar_t* str, wchar_t** endptr, int base);
 // unsigned long int wcstoul(const wchar_t* str, wchar_t** endptr, int base);
 
-// wchar_t* wcscat (wchar_t* destination, const wchar_t* source);
-// wchar_t* wcschr (const wchar_t* ws, wchar_t wc);
-// int wcscmp (const wchar_t* wcs1, const wchar_t* wcs2);
-// int wcscoll (const wchar_t* wcs1, const wchar_t* wcs2);
-// wchar_t* wcscpy (wchar_t* destination, const wchar_t* source);
+wchar_t* wcscat (wchar_t* destination, const wchar_t* source);
+wchar_t* wcschr (const wchar_t* ws, wchar_t wc);
+int wcscmp (const wchar_t* wcs1, const wchar_t* wcs2);
+// #define wcscoll(s1, s2) wcscmp(s1, s2)
+wchar_t* wcscpy (wchar_t* destination, const wchar_t* source);
 // size_t wcscspn (const wchar_t* wcs1, const wchar_t* wcs2);
-// size_t wcslen (const wchar_t* wcs);
-// wchar_t* wcsncat (wchar_t* destination, const wchar_t* source, size_t num);
-// int wcsncmp (const wchar_t* wcs1, const wchar_t* wcs2, size_t num);
-// wchar_t* wcsncpy (wchar_t* destination, const wchar_t* source, size_t num);
+size_t wcslen (const wchar_t* wcs);
+wchar_t* wcsncat (wchar_t* destination, const wchar_t* source, size_t num);
+int wcsncmp (const wchar_t* wcs1, const wchar_t* wcs2, size_t num);
+wchar_t* wcsncpy (wchar_t* destination, const wchar_t* source, size_t num);
 // wchar_t* wcspbrk (const wchar_t* wcs1, const wchar_t* wcs2);
-// wchar_t* wcsrchr (const wchar_t* ws, wchar_t wc);
+wchar_t* wcsrchr (const wchar_t* ws, wchar_t wc);
 // size_t wcsspn (const wchar_t* wcs1, const wchar_t* wcs2);
 // wchar_t* wcsstr (const wchar_t* wcs1, const wchar_t* wcs2);
 // wchar_t* wcstok (wchar_t* wcs, const wchar_t* delimiters, wchar_t** p);

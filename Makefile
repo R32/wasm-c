@@ -6,7 +6,7 @@ AR        := $(WASMTOOLS)/llvm-ar.exe
 LIBDIR    := lib
 OBJDIR    := obj
 INCLUDES  := -Iinclude
-SOURCES   := ctype.c errno.c locale.c string.c time.c stdlib.c
+SOURCES   := ctype.c errno.c locale.c string.c time.c stdlib.c wchar.c
 SOURCES   += _ucs2.c _malloc.c rand.c strtol.c
 SOURCES   += stdio.c printf.c
 OBJS      := $(addprefix $(OBJDIR)/, $(SOURCES:.c=.o))
@@ -51,6 +51,7 @@ $(OBJDIR)/errno.o: errno.c errno.h
 $(OBJDIR)/locale.o: locale.c locale.h
 $(OBJDIR)/string.o: string.c string.h
 $(OBJDIR)/time.o: time.c time.h
+$(OBJDIR)/wchar.o: wchar.c wchar.h
 #stdlib
 $(OBJDIR)/stdlib.o: stdlib.c stdlib.h
 $(OBJDIR)/_malloc.o: _malloc.c _malloc.h
