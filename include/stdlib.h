@@ -39,9 +39,6 @@ void srand (unsigned int seed);
 // char* getenv (const char* name);
 // int system (const char* command);
 
-inline int abs (int n) { return n < 0 ? -n : n; }
-inline long int labs (long int n) { return n < 0 ? -n : n; }
-
 // typedef struct { long quot; long rem; } div_t, ldiv_t;
 // div_t div (int numer, int denom);
 // ldiv_t ldiv (long int numer, long int denom);
@@ -53,4 +50,5 @@ void qsort (void* base, size_t num, size_t size,
 	int (*compar)(const void*, const void*));
 
 C_FUNCTION_END
+
 #endif

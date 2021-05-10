@@ -7,7 +7,9 @@
 #include "_cdefs.h"
 #include "stddef.h"
 
+#ifndef __cplusplus
 typedef unsigned short wchar_t;
+#endif
 
 #ifndef WCHAR_MIN
 #  define WCHAR_MIN      0
