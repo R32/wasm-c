@@ -138,7 +138,7 @@ static inline void freetag(struct tag* tag) {
 
 EM_EXPORT(realloc) void* realloc(void* ptr, int size) {
 	if ((int)ptr < (int)&__heap_base)
-		return ptr;
+		return malloc(size); // if do realloc(0, size)
 	size = sz_align(size);
 	struct tag* tag = container_of(ptr, struct tag, __data__);
 	if (size <= TAG_DATASIZE(tag))
