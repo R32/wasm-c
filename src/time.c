@@ -5,19 +5,19 @@
 #include "time.h"
 #include "_builtin.h"
 
-EM_IMPORT(now) time_t js_datenow();
+EM_IMPORT(now) double js_datenow();
 
 clock_t clock() {
 	static time_t prev = 0;
 	if (prev == 0) {
-		prev = js_datenow();
+		prev = (time_t)js_datenow();
 		return 0;
 	}
-	return (clock_t)(js_datenow() - prev);
+	return (clock_t)((time_t)js_datenow() - prev);
 }
 
 time_t time(time_t* t) {
-	time_t now = js_datenow();
+	time_t now = (time_t)js_datenow();
 	if (t != NULL)
 		*t = now;
 	return now;
