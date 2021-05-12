@@ -11,7 +11,7 @@
 #  define _assert(e)   ((void)0)
 #else
 #  define _assert(e)   assert(e)
-#  define assert(e)    ((e) ? ((void)0) : ((void)js_sendmessage(J_ABORT, (int)__FILE__, __LINE__)))
+#  define assert(e)    ((e) ? ((void)0) : ((void)js_sendmsg(J_ABORT, (int)__FILE__, __LINE__)))
 #endif
 
 #endif

@@ -6,12 +6,18 @@
 #include "_builtin.h"
 #include "_malloc.h"
 #include "stddef.h"
+#include "_javascript_call.h"
 
 extern const int __heap_base;
 
 #define PAGE_SIZE         (1024 * 64)
+
 #define memory_size()     (__builtin_wasm_memory_size(0) * PAGE_SIZE)
-#define memory_grow(page) (__builtin_wasm_memory_grow(0, page))
+
+#define memory_grow(page) ({             \
+    __builtin_wasm_memory_grow(0, page); \
+    js_sendmsg(J_MEMGROW, 0, 0);         \
+})
 
 struct tag {
 	int size;

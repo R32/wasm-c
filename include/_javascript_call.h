@@ -13,7 +13,7 @@ enum JS_MESSAGE {
 	J_PUTCHAR,
 };
 
-EM_IMPORT(jproc) int js_sendmessage(enum JS_MESSAGE msg, int wparam, int lparam);
+EM_IMPORT(jproc) int js_sendmsg(enum JS_MESSAGE msg, int wparam, int lparam);
 
 
 #endif
