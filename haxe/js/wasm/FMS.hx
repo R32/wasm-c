@@ -3,6 +3,7 @@ package js.wasm;
 import js.lib.DataView;
 import js.lib.WebAssembly;
 import js.lib.ArrayBuffer;
+import js.lib.Uint8Array;
 import js.lib.webassembly.Memory;
 
 @:native("_FMS")
@@ -12,14 +13,19 @@ class FMS {
 
 	var view : DataView;
 
+	var vu8  : Uint8Array;
+
 	var output : js.html.DivElement;
 
 	function new( imports : Dynamic ) {
 		if (imports.env == null)
 			imports.env = {};
-		this.cmem = imports.env.memory;
-		if (imports.env.jproc == null)
-			imports.env.jproc = this.defProc;
+		var env = imports.env;
+		this.cmem = env.memory;
+		if (env.jproc == null)
+			env.jproc = this.defProc;
+		if (env.now == null)
+			env.now = js.lib.Date.now;
 	}
 
 	static public function init( buf : ArrayBuffer, imports : Dynamic ) {
@@ -31,6 +37,7 @@ class FMS {
 			if (fms.cmem == null)
 				fms.cmem = cast inst.exports.memory;
 			fms.view = new DataView(fms.cmem.buffer);
+			fms.vu8 = new Uint8Array(fms.cmem.buffer);
 			CStub.select(cast inst.exports, fms);
 			return moi;
 		});
@@ -186,6 +193,54 @@ class FMS {
 		return i - ptr;
 	}
 
+	public function readBuffs( src : Ptr, len : Int) : ArrayBuffer {
+		return cmem.buffer.slice(src, src + len);
+	}
+
+	public function writeBuffs( dst : Ptr, buf : ArrayBuffer, len : Int ) : Void {
+		vu8.set(new Uint8Array(buf, 0, len), dst);
+	}
+
+	public function readArray( src : Ptr, len : Int, unit : OpUnit ) : Array<Dynamic> {
+		var a : Array<Dynamic> = js.Syntax.construct(Array, len);
+		var i = 0;
+		while(i < len) {
+			switch(unit) {
+			case OpU8:
+				a[i] = vu8[src + i];
+			case OpU16:
+				a[i] = view.getUint16( src + (i << 1), true);
+			case OpI32:
+				a[i] = view.getInt32(  src + (i << 2), true);
+			case OpF32:
+				a[i] = view.getFloat32(src + (i << 2), true);
+			case OpF64:
+				a[i] = view.getFloat64(src + (i << 3), true);
+			}
+			i++;
+		}
+		return a;
+	}
+
+	public function writeArray( dst : Ptr, src : Array<Dynamic>, len : Int, unit : OpUnit ) : Void {
+		var i = 0;
+		while(i < len) {
+			switch(unit) {
+			case OpU8:
+				vu8[dst + i] = src[i];
+			case OpU16:
+				view.setUint16( dst + (i << 1), src[i], true);
+			case OpI32:
+				view.setInt32(  dst + (i << 2), src[i], true);
+			case OpF32:
+				view.setFloat32(dst + (i << 2), src[i], true);
+			case OpF64:
+				view.setFloat64(dst + (i << 3), src[i], true);
+			}
+			i++;
+		}
+	}
+
 	function defProc( msg : JMsg, wparam : Int, lparam : Int) : Int {
 		switch(msg) {
 		case J_ASSERT if (wparam >= 1024):
@@ -195,6 +250,7 @@ class FMS {
 			throw new js.lib.Error("" + wparam);
 		case J_MEMGROW:
 			view = new DataView(cmem.buffer);
+			vu8 = new Uint8Array(cmem.buffer);
 		case J_PUTCHAR:
 			putchar(wparam);
 		default:
@@ -203,7 +259,7 @@ class FMS {
 	}
 
 	function putchar( c ) {
-	#if !no_putchar
+	#if !no_traces
 		if (output == null) {
 			var id = "wasm_cout";
 			var doc = js.Browser.document;
@@ -237,4 +293,12 @@ extern enum abstract JMsg(Int) {
 	var J_ABORT   = 10;
 	var J_MEMGROW = 11;
 	var J_PUTCHAR = 12;
+}
+
+extern enum abstract OpUnit(Int) {
+	var OpU8  = 1;
+	var OpU16 = 2;
+	var OpI32 = 3;
+	var OpF32 = 4;
+	var OpF64 = 5;
 }
