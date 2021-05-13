@@ -21,7 +21,7 @@ endif
 OUTDIR    := bin
 OBJDIR    := obj
 INCLUDES  :=
-SOURCES   := main.c
+SOURCES   := main.c test.c
 OBJS      := $(addprefix $(OBJDIR)/, $(SOURCES:.c=.o))
 WASM      := $(OUTDIR)/app.wasm
 JS        := $(OUTDIR)/app.js
@@ -70,5 +70,3 @@ vpath %.c c
 $(OBJDIR)/%.o: %.c
 	@$(CC) $(CCFLAGS) $(CLANGFLAGS) -o $@ -c $<
 	@echo Compile $< TO $@
-
-$(OBJDIR)/main.o: main.c

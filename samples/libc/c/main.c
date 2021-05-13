@@ -1,3 +1,5 @@
+#include "assert.h"
+#include "time.h"
 #include "stdint.h"
 #include "stddef.h"
 #include "stdarg.h"
@@ -5,7 +7,6 @@
 #include "float.h"
 #include "limits.h"
 #include "ctype.h"
-#include "_malloc.h"
 #include "math.h"
 #include "string.h"
 #include "wchar.h"
@@ -15,8 +16,10 @@
 extern const int __heap_base;
 extern const int __data_end;
 extern const int __global_base;
+extern void test();
 
 EM_EXPORT(test) double arbitrary_name(double v) {
+	srand(time(NULL));
 	printf("Only supports ansi characters!\n");
 	printf("global_base: %d, data_end: %d, heap_base: %d, stack size: %d\n",
 		(int)&__global_base,
@@ -27,5 +30,6 @@ EM_EXPORT(test) double arbitrary_name(double v) {
 			: (int)&__heap_base - (int)&__data_end
 	);
 	printf("wcslen: %d\n", wcslen(L"年年岁岁花相似"));
-	return sqrt(v);
+	test();
+	return v;
 }

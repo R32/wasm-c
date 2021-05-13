@@ -22,7 +22,8 @@ class Main {
 		};
 		FMS.init(buffer, imports).then(function(moi) {
 			var clib : MyExports = cast moi.instance.exports;
-			trace(clib.test(Math.PI / (180 / 60)));
+			var v = clib.test(Math.PI / (180 / 60));
+			trace(v);
 		});
 	}
 
