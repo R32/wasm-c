@@ -48,7 +48,8 @@ EM_EXPORT(memcpy) void* memcpy(void* dst, const void* src, size_t n) {
 			*d = *s;
 		}
 	} else {
-		for (; n; n--) *d++ = *s++;
+		while (n--)
+			*d++ = *s++;
 	}
 	return dst;
 }
@@ -56,12 +57,15 @@ EM_EXPORT(memcpy) void* memcpy(void* dst, const void* src, size_t n) {
 void* memmove(void* dst, const void* src, size_t n) {
 	char *d = dst;
 	const char *s = src;
-	if (s > d) {
-		if (s - d > sizeof(int))
+	const int x = s - d;
+	if (x > 0) {
+		if (x >= sizeof(int))
 			return memcpy(d, s, n);
-		for (; n; n--)
+		while(n--)
 			*d++ = *s++;
-	} else if (s < d) {
+	} else if (x < 0) {
+		if (-x >= n)
+			return memcpy(d, s, n);
 		while(n--)
 			d[n] = s[n];
 	}
@@ -69,19 +73,21 @@ void* memmove(void* dst, const void* src, size_t n) {
 }
 
 char* strcpy(char* dst, const char* src) {
+	char* const r = dst;
 	while((*dst = *src)) {
 		dst++;
 		src++;
 	}
-	return dst;
+	return r;
 }
 
 char* strncpy(char* dst, const char* src, size_t n) {
+	char* const r = dst;
 	while(n-- && (*dst = *src)) {
 		dst++;
 		src++;
 	}
-	return dst;
+	return r;
 }
 
 //// Concatenation
@@ -185,7 +191,7 @@ size_t strspn(const char* str, const char* sub) {
 	if (!c)
 		return 0;
 	if (!sub[1]) {
-		while(*s == c) 
+		while(*s == c)
 			s++;
 		return s - (uint8_t*)str;
 	}
@@ -195,7 +201,7 @@ size_t strspn(const char* str, const char* sub) {
 		sub++;
 		c = *(uint8_t*)sub;
 	} while(c);
-	
+
 	while((c = *s) && BITOP(bitmap, c, &))
 		s++;
 	return s - (uint8_t*)str;
