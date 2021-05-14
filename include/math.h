@@ -42,7 +42,7 @@ float  atanhf(float x);
 
 // Exponential and logarithmic functions
 double exp(double x);
-double frexp(double x, int i);
+double frexp(double x, int* i);
 double ldexp(double x, int i);
 double log(double x);
 double log10(double x);
@@ -57,7 +57,7 @@ double scalbn(double x, int i);
 double scalbln(double x, int l);
 
 float  expf(float x);
-float  frexpf(float x, int i);
+float  frexpf(float x, int* i);
 float  ldexpf(float x, int i);
 float  logf(float x);
 float  log10f(float x);
