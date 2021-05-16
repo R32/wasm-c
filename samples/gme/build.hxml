@@ -1,0 +1,15 @@
+-dce full
+-cp src
+-cp ../../haxe
+-D analyzer-optimize
+-D old-error-format
+# -D no_traces
+# -D print-wasm
+# -D LOCAL
+
+--each
+### AudioWorkletNode
+-main Main
+-js bin/app.js
+
+### AudioWorkletProcessor

@@ -6,4 +6,6 @@ dump
 *.def
 *.wat
 *.txt
+*.nsf
 tmp.*
+game-music-emu-*
