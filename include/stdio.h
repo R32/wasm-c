@@ -4,6 +4,7 @@
 
 #ifndef _STDIO_H
 #define _STDIO_H    1
+#include "_cdefs.h"
 #include "stddef.h"
 #include "stdint.h"
 #include "_javascript_call.h"
@@ -26,6 +27,7 @@ typedef long             FILE;
 #define SEEK_CUR         1
 #define SEEK_END         2
 
+C_FUNCTION_BEGIN
 // Operations on files:
 int remove(const char*);
 int rename(const char*, const char*);
@@ -86,4 +88,5 @@ int feof(FILE*);
 int ferror(FILE*);
 void perror(const char*);
 
+C_FUNCTION_END
 #endif

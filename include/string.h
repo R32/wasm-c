@@ -4,6 +4,8 @@
 #ifndef _STRING_H
 #define _STRING_H    1
 #include "stddef.h"
+#include "_cdefs.h"
+C_FUNCTION_BEGIN
 
 //// Copying
 void* memcpy(void* dst, const void* src, size_t n);
@@ -37,4 +39,7 @@ size_t strlen(const char* s);
 // size_t strxfrm(char* dst, const char* src, size_t n);  
 // #define strcoll(s1, s2) strcmp(s1, s2)
 // char* strerror(int errnum)
+
+
+C_FUNCTION_END
 #endif

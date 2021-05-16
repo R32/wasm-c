@@ -5,11 +5,12 @@
 #ifndef _MATH_H
 #define _MATH_H    1
 #include "_builtin.h"
+#include "_cdefs.h"
 
 
 #ifdef OPENLIBM
+C_FUNCTION_BEGIN
 // https://github.com/JuliaMath/openlibm
-
 // Trigonometric functions
 double cos(double x);
 double sin(double x);
@@ -133,6 +134,7 @@ float  nexttowardf(float x, long double y);
 double fma(double x, double y, double z);
 float  fmaf(float x, float y, float z);
 
+C_FUNCTION_END
 #endif
 
 
