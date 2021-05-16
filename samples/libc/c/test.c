@@ -33,6 +33,7 @@ static void shuffle(char* a[], int len) {
 int ptr_intersect(const void* aa, const void* bb) {
 	char* a = *(char**)aa;
 	char* b = *(char**)bb;
+	assert(PTRSIZE(a) <= 1024 && PTRSIZE(b) <= 1024);
 	if (a > b) {
 		assert(b + PTRSIZE(b) < a);
 	} else if (a < b) {
@@ -51,9 +52,7 @@ static void t_malloc() {
 		aptr[i] = malloc(RAND(1024, 0));
 	}
 	shuffle(aptr, max);
-	for(int i = 0; i < max; i++) {
-		assert(PTRSIZE(aptr[i]) <= 1024);
-	}
+	qsort(aptr, max, sizeof(aptr[0]), ptr_intersect);
 	qsort(aptr, max, sizeof(aptr[0]), ptr_intersect);
 
 	// release half of the pointers
@@ -62,6 +61,7 @@ static void t_malloc() {
 	for(int i = max / 2; i < max; i++) aptr[i] = malloc(RAND(1024, 0));
 	shuffle(aptr, max);
 	qsort(aptr, max, sizeof(char*), ptr_intersect);
+	qsort(aptr, max, sizeof(char*), ptr_intersect);
 
 	// release half of the pointers
 	for(int i = max / 2; i < max; i++) free(aptr[i]);
@@ -69,10 +69,12 @@ static void t_malloc() {
 	for(int i = max / 2; i < max; i++) aptr[i] = malloc(RAND(1024, 0));
 	shuffle(aptr, max);
 	qsort(aptr, max, sizeof(char*), ptr_intersect);
+	qsort(aptr, max, sizeof(char*), ptr_intersect);
 
 
 	for(int i = max / 2; i < max; i++) free(aptr[i]);
 	shuffle(aptr, max / 2);
+	qsort(aptr, max / 2, sizeof(char*), ptr_intersect);
 	qsort(aptr, max / 2, sizeof(char*), ptr_intersect);
 	for(int i = 0; i < max / 2; i++) free(aptr[i]);
 }
@@ -116,9 +118,42 @@ static void t_memcpy() {
 	free(p1);
 }
 
+void t_math() {
+	#define EPSILON          0.0000000001
+	#define EPSILON_F        0.000001
+	#define R30              (30 * 3.141592653589793 / 180)
+	#define R30F             (float)R30
+	#define FD(a, b)         assert(fabs((a) - (b)) < EPSILON)
+	#define FF(a, b)         assert(fabsf((a) - (b)) < EPSILON_F)
+
+	// Trigonometric functions
+	FD(asin(sin(R30)), R30);
+	FD(acos(cos(R30)), R30);
+	FD(atan(tan(R30)), R30);
+	FD(atan2(tan(R30), 1.0), R30);
+
+	FF(asinf(sinf(R30F)), R30F);
+	FF(acosf(cosf(R30F)), R30F);
+	FF(atanf(tanf(R30F)), R30F);
+	FF(atan2f(tanf(R30F),  1.0f), R30F);
+
+	// Hyperbolic functions
+	FD(asinh(sinh(R30)), R30);
+	FD(acosh(cosh(R30)), R30);
+	FD(atanh(tanh(R30)), R30);
+	FF(asinhf(sinhf(R30F)), R30F);
+	FF(acoshf(coshf(R30F)), R30F);
+	FF(atanhf(tanhf(R30F)), R30F);
+
+	// Exponential and logarithmic functions
+	double fract = 0.;
+	int e = 0;
+}
+
 void test() {
 	int n = 10;
 	while(n--)
 		t_malloc();
 	t_memcpy();
+	t_math();
 }

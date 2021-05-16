@@ -9,11 +9,11 @@ import js.lib.webassembly.Memory;
 @:native("_FMS")
 class FMS {
 
-	var cmem : Memory;
+	public var cmem(default, null) : Memory;
 
-	var view : DataView;
+	public var view(default, null) : DataView;
 
-	var vu8  : Uint8Array;
+	public var vu8(default, null) : Uint8Array;
 
 	var output : js.html.DivElement;
 
@@ -28,19 +28,20 @@ class FMS {
 			env.now = js.lib.Date.now;
 	}
 
-	static public function init( buf : ArrayBuffer, imports : Dynamic ) {
+	function attach( moi : WebAssemblyInstantiatedSource ) {
 		if (js.Syntax.typeof(CStub.fms) != "undefined")
 			throw new js.lib.Error("single instance only");
+		var inst = moi.instance;
+		if (cmem == null)
+			cmem = cast inst.exports.memory;
+		defProc(J_MEMGROW, 0, 0);
+		CStub.select(cast inst.exports, this);
+		return moi;
+	}
+
+	static public function init( buf : ArrayBuffer, imports : Dynamic ) {
 		var fms = new FMS(imports);
-		return WebAssembly.instantiate(buf, imports).then(function( moi ) {
-			var inst = moi.instance;
-			if (fms.cmem == null)
-				fms.cmem = cast inst.exports.memory;
-			fms.view = new DataView(fms.cmem.buffer);
-			fms.vu8 = new Uint8Array(fms.cmem.buffer);
-			CStub.select(cast inst.exports, fms);
-			return moi;
-		});
+		return WebAssembly.instantiate(buf, imports).then(fms.attach);
 	}
 
 	inline function atostr(a) return js.Syntax.code("String.fromCharCode.apply(null, {0})", a);
@@ -241,7 +242,7 @@ class FMS {
 		}
 	}
 
-	function defProc( msg : JMsg, wparam : Int, lparam : Int) : Int {
+	public function defProc( msg : JMsg, wparam : Int, lparam : Int) : Int {
 		switch(msg) {
 		case J_ASSERT if (wparam >= 1024):
 			var s = "FILE: " + this.readUTF8(cast wparam, -1) + ", LINE: " + lparam;
@@ -283,7 +284,8 @@ class FMS {
 				doc.body.appendChild(output);
 			}
 		}
-		output.innerText += String.fromCharCode(c);
+		// Avoid generating "String.fromCodePoint"
+		output.innerText += (js.Syntax.code("String.fromCharCode({0})", c) : String);
 	#end
 	}
 }

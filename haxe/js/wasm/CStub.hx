@@ -7,7 +7,6 @@ import js.lib.webassembly.Memory;
 */
 @:native("") extern class CStub {
 
-	//@:native("__mem") static var mem(default, set) : Memory;
 	@:native("__lib") static var lib(default, never) : CLib;
 	@:native("__fms") static var fms(default, never) : FMS;
 

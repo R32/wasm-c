@@ -20,12 +20,12 @@
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="analyzer-optimize" />
+    <option directives="analyzer-optimize&#xA;old-error-format&#xA;LOCAL" />
     <option flashStrict="True" />
     <option noInlineOnDebug="False" />
     <option mainClass="Main" />
     <option enabledebug="True" />
-    <option additional="-dce full&#xA;--resource bin/app.wasm@wasm" />
+    <option additional="-dce full" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>

@@ -46,4 +46,12 @@ class Tools {
 		Sys.println(wasm.toString());
 		return macro {}
 	}
+
+	macro static public function addResource( e : ExprOf<String> ) {
+		var a : Array<String> = e.getValue().split("@");
+		if (a.length != 2)
+			Context.fatalError("path/to/file.wasm@name", e.pos);
+		Context.addResource(a[1], sys.io.File.getBytes(a[0]));
+		return macro {}
+	}
 }
