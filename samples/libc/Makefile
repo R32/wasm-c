@@ -59,7 +59,7 @@ clean:
 CCFLAGS     := -Ofast -std=c99 -nostdinc
 
 # Global compiler flags for Wasm targeting
-CLANGFLAGS  := -target wasm32 -flto -fshort-wchar -D__EMSCRIPTEN__ -DOPENLIBM
+CLANGFLAGS  := -target wasm32 -flto -fshort-wchar -D__EMSCRIPTEN__
 CLANGFLAGS  += -fvisibility=hidden -fno-builtin -nostdlib -fno-exceptions -fno-threadsafe-statics
 CLANGFLAGS  += -isystem"$(LIBCROOT)/include"
 

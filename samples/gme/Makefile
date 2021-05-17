@@ -50,8 +50,8 @@ CCFLAGS    := -Ofast -std=c99 -nostdinc
 CXXFLAGS   := -Ofast -std=c++11 -nostdinc++ -fno-rtti -Wno-writable-strings -Wno-unknown-pragmas
 CLANGFLAGS := $(INCLUDES) -target wasm32 -nostdlib -flto -fshort-wchar
 CLANGFLAGS += -fvisibility=hidden -fno-builtin -fno-exceptions -fno-threadsafe-statics
-# openlibm, use_gme_nsf
-CLANGFLAGS += -DOPENLIBM -D__EMSCRIPTEN__ -DNDEBUG -DUSE_GME_NSF
+# -D
+CLANGFLAGS += -D__EMSCRIPTEN__ -DNDEBUG
 CLANGFLAGS += -isystem"$(LIBCROOT)/include"
 
 all: $(OBJDIR) $(TARGET) $(JS)

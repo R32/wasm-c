@@ -8,7 +8,7 @@ These two files are used to cut unnecessary functions for wasm
 // Make.files       ---> openlibm-master/src/
 ```
 
-In order to compile openlibm, You still need to modify the `openlibm-master/Makefile` for cygwin
+In order to compile openlibm, You still have to modify the `openlibm-master/Makefile` for cygwin
 
 ```makefile
 OPENLIBM_HOME= .
@@ -27,9 +27,3 @@ CFLAGS_add += -target wasm32 -flto -D__EMSCRIPTEN__ -fshort-wchar
 ```
 
 Use `make ARCH=wasm32` to build the wasm32 library
-
-for you project
-
-Add `-DOPENLIBM` for `clang.exe`
-
-Add .`-lopenlibm` for `wasm-ld.exe`

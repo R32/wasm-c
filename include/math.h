@@ -7,8 +7,7 @@
 #include "_builtin.h"
 #include "_cdefs.h"
 
-
-#ifdef OPENLIBM
+#ifndef NO_OPENLIBM
 C_FUNCTION_BEGIN
 // https://github.com/JuliaMath/openlibm
 // Trigonometric functions
