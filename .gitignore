@@ -1,5 +1,6 @@
 obj
 dump
+release
 *.a
 *.js
 *.wasm

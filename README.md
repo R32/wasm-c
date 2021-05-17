@@ -21,10 +21,11 @@ something about wasm
 
 Win7x64 + cygwin(for gnu make)
 
-* clang.exe, wasm-ld.exe, llvm-ar.exe: all of them are extracted from [the official LLVM releases page] by 7zip
+* clang.exe, wasm-ld.exe, llvm-ar.exe: extracted from [the official LLVM releases page] by 7zip
 * wasm-opt.exe: [WebAssembly binaryen]
 * ~~wasm2wat.exe~~: run `wasm-opt --print file.wasm`
 * haxe 4+
+* [openlibm](https://github.com/JuliaMath/openlibm)
 
 ### TODO
 

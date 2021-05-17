@@ -1,0 +1,11 @@
+{
+	"name" : "wasm-c",
+	"classPath": "haxe",
+	"url" : "https://github.com/r32/wasm-c",
+	"license" : "MIT",
+	"description" : "Compiling C to WebAssembly without Emscripten",
+	"version" : "0.1.0",
+	"releasenote" : "",
+	"contributors" : ["r32"],
+	"dependencies" : {}
+}
