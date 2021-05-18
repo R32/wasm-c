@@ -1,17 +1,14 @@
 package js.wasm;
 
-import js.lib.webassembly.Memory;
+@:keep @:native("__lib") var lib(default, null) : CLib;
+@:keep @:native("__fms") var fms(default, null) : FMS;
 
 /**
  This class is only used for macro, except the `.select` field
 */
-@:native("") extern class CStub {
-
-	@:native("__lib") static var lib(default, never) : CLib;
-	@:native("__fms") static var fms(default, never) : FMS;
-
+extern class CStub {
 	public static inline function select( c : CLib, f : FMS ) : Void {
-		js.Lib.global.__lib = c;
-		js.Lib.global.__fms = f;
+		lib = c;
+		fms = f;
 	}
 }

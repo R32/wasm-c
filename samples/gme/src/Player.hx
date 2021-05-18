@@ -56,10 +56,10 @@ class Player {
 	}
 
 	public function load( nsf : js.lib.ArrayBuffer ) {
-		var ptr = CStub.lib.malloc(nsf.byteLength);
-		CStub.fms.writeBuffs(ptr, nsf, nsf.byteLength);
+		var ptr = lib.malloc(nsf.byteLength);
+		fms.writeBuffs(ptr, nsf, nsf.byteLength);
 		gme.load(ptr, nsf.byteLength);
-		CStub.lib.free(ptr);
+		lib.free(ptr);
 		//
 		trackMax = gme.tracks();
 		track = 0;
@@ -77,15 +77,15 @@ class Player {
 	}
 
 	function init() {
-		if (CStub.lib == null)
+		if (lib == null)
 			throw new js.lib.Error("todo");
 		if (audio != null)
 			return;
 		audio = new AudioContext({ sampleRate: SAMPLE_RATE });
 		procs = audio.createScriptProcessor(SAMPLECOUNT);
 		procs.onaudioprocess = onProcess;
-		shout = CStub.lib.malloc(SAMPLECOUNT * (2 * 2)); // sizeof(short) * channels
-		tai16 = new Int16Array(CStub.fms.cmem.buffer, shout, SAMPLECOUNT * 2);  // c * (2 * 2) / 2
+		shout = lib.malloc(SAMPLECOUNT * (2 * 2)); // sizeof(short) * channels
+		tai16 = new Int16Array(fms.cmem.buffer, shout, SAMPLECOUNT * 2);  // c * (2 * 2) / 2
 		gme = new Gme(SAMPLE_RATE);
 		gme.stereo(1.0); // no effect??
 		document.onkeydown = onKeyDown;
@@ -150,8 +150,8 @@ class Player {
 
 	public function onCCall( msg : JMsg, w : Int, l : Int ) : Int {
 		if (msg == J_MEMGROW && shout != Ptr.NUL)
-			tai16 = new Int16Array(CStub.fms.cmem.buffer, shout, SAMPLECOUNT * 2);  // count * ((2 * 2) / 2)
-		return CStub.fms.defProc(msg, w, l);
+			tai16 = new Int16Array(fms.cmem.buffer, shout, SAMPLECOUNT * 2);  // count * ((2 * 2) / 2)
+		return fms.defProc(msg, w, l);
 	}
 
 	public static inline var SAMPLECOUNT  = 4096;

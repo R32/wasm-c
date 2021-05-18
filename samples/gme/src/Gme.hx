@@ -78,7 +78,7 @@ extern private class CGme {
 extern abstract GmeError(Ptr) to Ptr {
 	inline function success() : Bool return this == Ptr.NUL;
 	inline function failed() : Bool return this != Ptr.NUL;
-	inline function toString() : String return CStub.fms.readUTF8(this, -1);
+	inline function toString() : String return fms.readUTF8(this, -1);
 }
 
 extern abstract Gme(Ptr) to Ptr {

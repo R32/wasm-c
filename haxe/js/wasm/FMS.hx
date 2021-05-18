@@ -31,7 +31,7 @@ class FMS {
 	}
 
 	function attach( moi : WebAssemblyInstantiatedSource ) {
-		if (js.Syntax.typeof(CStub.fms) != "undefined")
+		if (CStub.fms != null)
 			throw new js.lib.Error("single instance only");
 		var inst = moi.instance;
 		if (cmem == null)
