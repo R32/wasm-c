@@ -5,6 +5,8 @@ import js.lib.WebAssembly;
 import js.lib.ArrayBuffer;
 import js.lib.Uint8Array;
 import js.lib.webassembly.Memory;
+import tools.Macros.BIND;
+import tools.Macros.FUNC;
 
 @:native("_FMS")
 class FMS {
@@ -23,7 +25,7 @@ class FMS {
 		var env = imports.env;
 		this.cmem = env.memory;
 		if (env.jproc == null)
-			env.jproc = this.defProc;
+			env.jproc = BIND(this.defProc);
 		if (env.now == null)
 			env.now = js.lib.Date.now;
 	}
@@ -41,7 +43,7 @@ class FMS {
 
 	static public function init( buf : ArrayBuffer, imports : Dynamic ) {
 		var fms = new FMS(imports);
-		return WebAssembly.instantiate(buf, imports).then(fms.attach);
+		return WebAssembly.instantiate(buf, imports).then(FUNC(fms.attach));
 	}
 
 	inline function atostr(a) return js.Syntax.code("String.fromCharCode.apply(null, {0})", a);
