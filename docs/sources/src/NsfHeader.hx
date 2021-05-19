@@ -2,8 +2,6 @@ package;
 
 import js.wasm.Ptr;
 
-class NSF {}
-
 #if !macro
 @:build(tools.SimpleStruct.build())
 #end

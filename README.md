@@ -3,6 +3,8 @@ something about wasm
 
 **experimental**
 
+**[live demo](https://r32.github.io/wasm-c/)**
+
 ### Reference
 
 [webassembly-without-emscripten](http://schellcode.github.io/webassembly-without-emscripten)
