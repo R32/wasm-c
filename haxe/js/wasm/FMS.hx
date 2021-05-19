@@ -93,11 +93,11 @@ class FMS {
 	public function readUCS2( ptr : Ptr, max : Int ) : String {
 		var a;
 		if (max < 0) {
-			max = view.byteLength;
 			a = [];
+			max = view.byteLength;
 		} else {
+			a = js.Syntax.construct(Array, max >> 1); // size / sizeof(wchar_t)
 			max = ptr + max;
-			a = js.Syntax.construct(Array, max);
 		}
 		var c;
 		while((ptr : Int) < max) {
