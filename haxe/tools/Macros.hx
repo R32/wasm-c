@@ -49,6 +49,8 @@ class Macros {
 	 ```js
 	 btn.onclick = this.onClick.bind(this);
 	 ```
+
+	 BUGBUG: you have to add "@:keep" to the "func" to prevent it from being cleared by DCE
 	*/
 	macro public static function BIND(func) {
 		var t1 = Context.typeof(func);

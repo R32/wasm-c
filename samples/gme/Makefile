@@ -36,7 +36,7 @@ endif
 # --initial-memory=$$((1024*64*12))
 # -z stack-size=$$((1024*64*8))
 LDFLAGS    += -L"$(LIBCROOT)/lib" -lwasmc -lopenlibm
-LDFLAGS    += --no-entry --lto-O3
+LDFLAGS    += --no-entry --lto-O3 --initial-memory=$$((1024*64*8))
 LDFLAGS    += $(addprefix --export=, $(EXPORTS))
 
 SOURCES    := $(GMEDIR)/game-music-emu-0.6.2/gme

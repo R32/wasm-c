@@ -50,7 +50,7 @@ extern private class CGme {
 	/**
 	  True if a track has reached its end
 	*/
-	static function gme_track_ended( gme : Gme ) : Bool;
+	static function gme_track_ended( gme : Gme ) : Int;
 
 	/**
 	 Number of milliseconds (1000 = one second) played since beginning of track
@@ -107,7 +107,7 @@ extern abstract Gme(Ptr) to Ptr {
 
 	inline function fadeout( msec : Int) : Void CGme.gme_set_fade(self, msec);
 
-	inline function isEnded() : Bool return CGme.gme_track_ended(self);
+	inline function isEnded() : Bool return CGme.gme_track_ended(self) == 1;
 
 	inline function tempo( t : Float ) : Void CGme.gme_set_tempo(self, t);
 
