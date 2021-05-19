@@ -8,5 +8,11 @@ release
 *.wat
 *.txt
 *.nsf
+
+!docs/gme.wasm
+!docs/Double Dragon 3.nsf
+!docs/main.js
+!docs/work.js
+
 tmp.*
 game-music-emu-*
