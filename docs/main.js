@@ -157,7 +157,10 @@ class Main {
 				let ab = this.result;
 				_gthis.wnode.port.postMessage({ type : 2, value : ab});
 			};
-			file.readAsArrayBuffer(this.files[0]);
+			let files = this.files;
+			if(files.length > 0) {
+				file.readAsArrayBuffer(files[0]);
+			}
 		};
 	}
 	asynInit() {

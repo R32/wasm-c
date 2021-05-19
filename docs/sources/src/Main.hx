@@ -176,7 +176,9 @@ class Main {
 				var ab : ArrayBuffer = js.Lib.nativeThis.result;
 				loadNsf(ab);
 			}
-			file.readAsArrayBuffer(js.Lib.nativeThis.files[0]);
+			var files = js.Lib.nativeThis.files;
+			if (files.length > 0)
+				file.readAsArrayBuffer(files[0]);
 		}
 	}
 
