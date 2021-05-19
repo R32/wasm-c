@@ -1,0 +1,116 @@
+body {
+	margin: 0 8px;
+	color: #343a40;
+}
+a[href], a[href]:link, a[href]:visited {
+	color: #0067D6;
+	text-decoration: none;
+}
+a[href]:hover, a[href]:link:hover, a[href]:visited:hover {
+	text-decoration: underline;
+}
+#page {
+	margin: 0 auto;
+	font-family: Consolas, monospace;
+	font-size: 16px;
+}
+#info {
+	overflow-y: auto;
+}
+#info > h2 {
+	text-align: center;
+	font-weight: normal;
+}
+#info > table {
+	table-layout: fixed;
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+#info > table td, #info > table th {
+	height: 36px;
+	padding: 0;
+}
+#info > table caption {
+	height: 36px;
+	font-size: 18px;
+	line-height: 36px;
+	caption-side: bottom;
+}
+#info > table th {
+	text-align: right;
+	width: 45%;
+	font-weight: normal;
+}
+#info > table td {
+	text-indent: 10px;
+}
+#player {
+	border: 1px solid #D0D0D0;
+}
+#player > .file-open {
+	height: 28px;
+}
+#player > .file-open input[type=file] {
+	visibility: hidden;
+	width: 16px;
+	height: 16px;
+	float: left;
+}
+#player > .file-open button {
+	font-size: 14px;
+	cursor: pointer;
+	height: 28px;
+	padding: 0 4px;
+	float: right;
+	border: 1px solid #D0D0D0;
+	border-radius: 0;
+	border-right: 0;
+	border-top: 0;
+}
+#player > .btn-group {
+	margin: 16px 0;
+	text-align: center;
+}
+#player > .btn-group button {
+	cursor: pointer;
+	height: 36px;
+	width: 56px;
+}
+#player > .btn-group button.play {
+	width: 56px;
+	border-radius: 100%;
+	height: 56px;
+	box-shadow: 0 0 4px #dc3545;
+}
+#player > .btn-group button.play.running {
+	color: #007bff;
+	border-color: #007bff;
+	animation: glowing 6s ease-in-out infinite alternate;
+}
+#player > .progress-bar {
+	padding: 0 16px 8px 16px;
+	font-size: 14px;
+}
+#player > .progress-bar input[type=range] {
+	display: block;
+	width: 100%;
+	cursor: pointer;
+	margin-bottom: 8px;
+}
+#player > .progress-bar label {
+	margin-left: 4px;
+}
+@keyframes glowing {
+	0% {
+		box-shadow: 0 0 4px #007bff;
+	}
+	100% {
+		box-shadow: 0 0 26px #0062CC;
+	}
+}
+@media (min-width: 768px) {
+	#page {
+		width: 720px;
+	}
+}

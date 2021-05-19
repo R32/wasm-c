@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Play NSF</title>
+	<link href="style.css" rel="stylesheet"/>
+</head>
+<body>
+	<div id="page">
+		<div id="info">
+			<a href="http://github.com/r32/wasm-c/docs/sources">Haxe Source Code</a>
+			<h2>Play NSF Music with AudioWorkletNode + WASM</h2>
+			<table>
+				<caption></caption>
+				<tbody>
+				<tr><th>game : </th> <td title="game"></td></tr>
+				<tr><th>author : </th> <td title="author"></td></tr>
+				<tr><th>copyright : </th> <td title="copyright"></td></tr>
+				<tr><th>tracks : </th> <td title="tracks"></td></tr>
+				</tbody>
+			</table>
+		</div>
+		<div id="player">
+			<div class="file-open">
+				<input type="file" accept=".nsf" />
+				<button type="button">open</button>
+			</div>
+			<div class="btn-group">
+				<button type="button" class="prev">Prev</button>
+				<button type="button" class="play">Init</button>
+				<button type="button" class="next">Next</button>
+			</div>
+			<div class="progress-bar">
+				<input type="range" min="0" max="90000" value="0" step="100" />
+				<label>00:00/01:30</label>
+			</div>
+		</div>
+	</div>
+	<script src="main.js"></script>
+</body>
+</html>

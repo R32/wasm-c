@@ -1,0 +1,19 @@
+-dce full
+-cp src
+-cp ../../haxe
+-D js-es=6
+-D analyzer-optimize
+# -D old-error-format
+-D no_traces
+--macro exclude('haxe.iterators.ArrayIterator')
+
+### AudioWorkletNode
+--each
+-lib no-vdom
+-main Main
+-js ../main.js
+
+### AudioWorkletProcessor
+--next
+--main GmeWorker
+-js ../work.js
