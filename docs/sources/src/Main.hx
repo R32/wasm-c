@@ -103,8 +103,8 @@ class Main {
 
 	inline function loadNsf( ab : ArrayBuffer) postMessage(Load, ab);
 
-	function timeString( sec : Int ) {
-		var m = numint(sec / 60);
+	@:pure function timeString( sec ) {
+		var m = Std.int(sec / 60);
 		var s = sec % 60;
 		return "0" + m + ":" + (s < 10 ? "0" : "") + s;
 	}
@@ -115,21 +115,20 @@ class Main {
 		var m : Message<EQuery> = me.data;
 		switch(m.type) {
 		case Tell:
-			trackTime = m.value;
+			var now = trackTime = m.value;
 			if (startFadeOut) {
-				if (trackTime > (TRACKDURATION * TIMESCALE)){
-					trackTime = 0;
+				if (now > (TRACKDURATION * TIMESCALE)){
 					trackUpdate(1);
 					startFadeOut = false;
 				}
-			} else if (trackTime >= ((TRACKDURATION - 5) * TIMESCALE)) {
+			} else if (now >= ((TRACKDURATION - 6) * TIMESCALE)) {
 				startFadeOut = true;
-				postMessage(FadeOut, trackTime + (1 * TIMESCALE));
+				postMessage(FadeOut, now + (1 * TIMESCALE));
 			}
 			// update slider
 			if (!slidePendding)
-				progress.slide.value = "" + numint(trackTime);
-			text(progress.label) = timeString(numint(trackTime / TIMESCALE)) + "/" + timeString(TRACKDURATION);
+				progress.slide.value = "" + Std.int(now);
+			text(progress.label) = timeString(Std.int(now / TIMESCALE)) + "/" + timeString(TRACKDURATION);
 		case TrackEnded:
 			if (m.value)
 				trackUpdate(1);
@@ -162,7 +161,7 @@ class Main {
 		}
 		// slider
 		progress.slide.onchange = function() { // onchange
-			var value = strint(js.Lib.nativeThis.value);
+			var value = int_of_string(nativeThis.value);
 			postMessage(Seek, value);
 		}
 		progress.slide.onmousedown = function() slidePendding = true;
@@ -172,11 +171,11 @@ class Main {
 		fileopen.button.onclick = function(e) fileopen.filectl.click();
 		fileopen.filectl.onchange = function(e) {
 			var file = new js.html.FileReader();
-			file.onload = function(){
-				var ab : ArrayBuffer = js.Lib.nativeThis.result;
+			file.onload = function() {
+				var ab : ArrayBuffer = nativeThis.result;
 				loadNsf(ab);
 			}
-			var files = js.Lib.nativeThis.files;
+			var files = nativeThis.files;
 			if (files.length > 0)
 				file.readAsArrayBuffer(files[0]);
 		}

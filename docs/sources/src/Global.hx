@@ -20,8 +20,7 @@ class Global {
 	public static inline var CSS_INLINE_BLOCK = "inline-block";
 	public static inline var CSS_EMPTY = "";
 
-	public static inline function strint( s : String ) : Int return js.Syntax.code("(0 | {0})", s);
-	public static inline function numint( n : Float ) : Int return js.Syntax.code("(0 | {0})", n);
+	public static inline function int_of_string( s : String ) : Int return (cast s) | 0;
 }
 
 @:native("console") extern var console : js.html.ConsoleInstance;

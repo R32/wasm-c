@@ -5,8 +5,7 @@ import js.lib.ArrayBuffer;
 import js.html.DOMElement;
 import js.html.MouseEvent;
 import js.html.KeyboardEvent;
-import js.html.KeyboardEvent in VK;
-
+import js.Lib.nativeThis;
 // from -lib wasm-c
 import tools.Macros.FUNC;
 import tools.Macros.BIND;
@@ -30,7 +29,6 @@ import Global.document;
 import Global.window;
 import Global.location;
 import Global.fetch;
-import Global.strint;
-import Global.numint;
+import Global.int_of_string;
 
 #end

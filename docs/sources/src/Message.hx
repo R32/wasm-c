@@ -15,11 +15,12 @@ typedef Message<T> = {
 
 /*
 enum NsfMessage {
-	Play(track : Int, ?nsf : ArrayBuffer);
-	Seek(msec : Int);
-	FadeOut(msec : Int);
-	Volume(v : Float);
-	Query(q : QueryType); // the result will be passed back through postMessage()
+	Load( nsf : ArrayBuffer )
+	Play( track : Int );
+	Seek( msec : Int );
+	FadeOut( msec : Int );
+	Volume( v : Float );
+	Query( q : EQuery );
 }
 */
 

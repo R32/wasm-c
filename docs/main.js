@@ -73,30 +73,26 @@ class Main {
 	}
 	timeString(sec) {
 		let s = sec % 60;
-		return "0" + (0 | (sec / 60)) + ":" + (s < 10 ? "0" : "") + s;
+		return "0" + (sec / 60 | 0) + ":" + (s < 10 ? "0" : "") + s;
 	}
 	onMessage(me) {
 		let m = me.data;
 		switch(m.type) {
 		case 10:
-			this.trackTime = m.value;
+			let now = this.trackTime = m.value;
 			if(this.startFadeOut) {
-				if(this.trackTime > 90000) {
-					this.trackTime = 0;
+				if(now > 90000) {
 					this.trackUpdate(1);
 					this.startFadeOut = false;
 				}
-			} else if(this.trackTime >= 85000) {
+			} else if(now >= 84000) {
 				this.startFadeOut = true;
-				this.wnode.port.postMessage({ type : 5, value : this.trackTime + 1000});
+				this.wnode.port.postMessage({ type : 5, value : now + 1000});
 			}
 			if(!this.slidePendding) {
-				let tmp = (0 | this.trackTime);
-				this.progress.children[0].value = "" + tmp;
+				this.progress.children[0].value = "" + (now | 0);
 			}
-			let tmp = this.timeString((0 | (this.trackTime / 1000))) + "/";
-			let tmp1 = this.timeString(90);
-			this.progress.children[1].innerText = tmp + tmp1;
+			this.progress.children[1].innerText = this.timeString(now / 1000 | 0) + "/" + this.timeString(90);
 			break;
 		case 11:
 			if(m.value) {
@@ -140,7 +136,7 @@ class Main {
 			_gthis.trackUpdate(1);
 		};
 		this.progress.children[0].onchange = function() {
-			let value = (0 | this.value);
+			let value = this.value | 0;
 			_gthis.wnode.port.postMessage({ type : 4, value : value});
 		};
 		this.progress.children[0].onmousedown = function() {

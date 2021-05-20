@@ -82,7 +82,7 @@ class GmeWorker extends AudioWorkletProcessor {
 			case TrackEnded: gme.isEnded();
 			case Volume:     volume;
 			case NsfInfo:
-				return; // Since it has been released, it is no longer available
+				return; // nsf has been released
 			}
 			postMessage(q, v);
 		}
