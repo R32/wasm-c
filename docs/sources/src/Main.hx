@@ -83,6 +83,7 @@ class Main {
 		postMessage(Play, track);
 		if (!playing)
 			toggle();
+		startFadeOut = false;
 	}
 
 	inline function infoUpdate( info : NsfInfo ) {
@@ -119,7 +120,6 @@ class Main {
 			if (startFadeOut) {
 				if (now > (TRACKDURATION * TIMESCALE)){
 					trackUpdate(1);
-					startFadeOut = false;
 				}
 			} else if (now >= ((TRACKDURATION - 6) * TIMESCALE)) {
 				startFadeOut = true;
@@ -162,6 +162,7 @@ class Main {
 		// slider
 		progress.slide.onchange = function() { // onchange
 			var value = int_of_string(nativeThis.value);
+			startFadeOut = false;
 			postMessage(Seek, value);
 		}
 		progress.slide.onmousedown = function() slidePendding = true;

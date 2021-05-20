@@ -70,6 +70,7 @@ class Main {
 		if(!this.playing) {
 			this.toggle();
 		}
+		this.startFadeOut = false;
 	}
 	timeString(sec) {
 		let s = sec % 60;
@@ -83,7 +84,6 @@ class Main {
 			if(this.startFadeOut) {
 				if(now > 90000) {
 					this.trackUpdate(1);
-					this.startFadeOut = false;
 				}
 			} else if(now >= 84000) {
 				this.startFadeOut = true;
@@ -137,6 +137,7 @@ class Main {
 		};
 		this.progress.children[0].onchange = function() {
 			let value = this.value | 0;
+			_gthis.startFadeOut = false;
 			_gthis.wnode.port.postMessage({ type : 4, value : value});
 		};
 		this.progress.children[0].onmousedown = function() {
