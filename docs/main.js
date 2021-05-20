@@ -164,7 +164,7 @@ class Main {
 		if(this.audio != null) {
 			return;
 		}
-		this.audio = new AudioContext({ sampleRate : 44100});
+		this.audio = new AudioContext({ sampleRate : 22050});
 		let _gthis = this;
 		this.audio.audioWorklet.addModule("work.js").then(function(a) {
 			_gthis.wnode = new AudioWorkletNode(_gthis.audio,"gme-worker",{ outputChannelCount : [2], processorOptions : { wasm : _gthis.wasm, nsf : _gthis.nsf}});

@@ -7,7 +7,10 @@ import haxe.Constraints.Function;
 
 class Global {
 
-	public static inline var SAMPLE_RATE = 44100;
+	public static inline var SIGN_NSF  = 'N'.code | 'E'.code << 8 | 'S'.code << 16 | 'M'.code << 24;
+	public static inline var SIGN_WASM = 'a'.code << 8 | 's'.code << 16 | 'm'.code << 24;
+
+	public static inline var SAMPLE_RATE = 22050;
 
 	public static inline var FRAME_COUNT = 128;
 

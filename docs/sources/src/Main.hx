@@ -34,7 +34,7 @@ class Main {
 
 		}).then(function(ab) {
 			var sign = new js.lib.Int32Array(ab[0], 0, 1);
-			if (sign[0] == ('a'.code << 8 | 's'.code << 16 | 'm'.code << 24)) {
+			if (sign[0] == SIGN_WASM) {
 				wasm = ab[0];
 				nsf = ab[1];
 			} else {

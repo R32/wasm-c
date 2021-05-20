@@ -28,7 +28,7 @@ class GmeWorker extends AudioWorkletProcessor {
 		FMS.init(opt.processorOptions.wasm,{}).then(function(moi) {
 			ptr16 = lib.malloc(FRAME_COUNT * CHANNEL * 2);
 			abi16 = new Int16Array(fms.cmem.buffer, ptr16, FRAME_COUNT * CHANNEL);
-			gme = new Gme(SAMPLE_RATE);
+			gme = new Gme(cast sampleRate);
 			gme.stereo(1.0);
 			loadNsf(opt.processorOptions.nsf);
 		});
@@ -41,7 +41,7 @@ class GmeWorker extends AudioWorkletProcessor {
 		var ptr = lib.malloc(nsf.byteLength);
 		fms.writeBuffs(ptr, nsf, nsf.byteLength);
 		var hnsf : NsfHeader = cast ptr; // powered by haxe macro;
-		if (hnsf.sign != ('N'.code | 'E'.code << 8 | 'S'.code << 16 | 'M'.code << 24)) {
+		if (hnsf.sign != SIGN_NSF) {
 			lib.free(ptr);
 			throw new js.lib.Error("Invalid NSF File.");
 		}

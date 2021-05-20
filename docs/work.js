@@ -12,7 +12,7 @@ class GmeWorker extends AudioWorkletProcessor {
 		_$FMS.init(opt.processorOptions.wasm,{ }).then(function(moi) {
 			_gthis.ptr16 = __lib.malloc(512);
 			_gthis.abi16 = new Int16Array(__fms.cmem.buffer,_gthis.ptr16,256);
-			let this1 = __lib.nsf_new(44100);
+			let this1 = __lib.nsf_new(sampleRate);
 			_gthis.gme = this1;
 			__lib.gme_set_stereo_depth(_gthis.gme,1.0);
 			_gthis.loadNsf(opt.processorOptions.nsf);

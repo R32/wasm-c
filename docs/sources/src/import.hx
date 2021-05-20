@@ -14,6 +14,8 @@ import Macros.text;
 import Macros.display;
 import Macros.clsl;
 //
+import Global.SIGN_WASM;
+import Global.SIGN_NSF;
 import Global.CHANNEL;
 import Global.SAMPLE_RATE;
 import Global.FRAME_COUNT;
