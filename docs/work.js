@@ -10,8 +10,8 @@ class GmeWorker extends AudioWorkletProcessor {
 			_gthis.onMessage(me);
 		};
 		_$FMS.init(opt.processorOptions.wasm,{ }).then(function(moi) {
-			_gthis.ptr16 = __lib.malloc(4096);
-			_gthis.abi16 = new Int16Array(__fms.cmem.buffer,_gthis.ptr16,2048);
+			_gthis.ptr16 = __lib.malloc(512);
+			_gthis.abi16 = new Int16Array(__fms.cmem.buffer,_gthis.ptr16,256);
 			let this1 = __lib.nsf_new(sampleRate);
 			_gthis.gme = this1;
 			__lib.gme_set_stereo_depth(_gthis.gme,1.0);
@@ -94,13 +94,12 @@ class GmeWorker extends AudioWorkletProcessor {
 		}
 		let outL = output[0][0];
 		let outR = output[0][1];
-		let size = outL.length;
-		__lib.gme_play(this.gme,size * 2,this.ptr16);
+		__lib.gme_play(this.gme,256,this.ptr16);
 		let src = this.abi16;
 		let i = 0;
 		let j = 0;
 		let v = this.vol;
-		while(i < size) {
+		while(i < 128) {
 			outL[i] = src[j++] * v;
 			outR[i] = src[j++] * v;
 			++i;

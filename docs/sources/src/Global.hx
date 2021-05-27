@@ -12,7 +12,7 @@ class Global {
 
 	public static inline var SAMPLE_RATE = 22050;
 
-	public static inline var FRAME_COUNTLIMIT = 128 * 8;
+	public static inline var FRAME_COUNT = 128;
 
 	public static inline var CHANNEL = 2;
 
