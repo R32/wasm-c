@@ -40,13 +40,17 @@ class Tools {
 	 2. Picks the corresponding field to initialize WebAssembly.Instance
 
 	 **WIP**
-	*/
+
 	macro static public function getImports( e : ExprOf<String> ) {
 		var wasm = getWASM(e);
 		Sys.println(wasm.toString());
 		return macro {}
 	}
+	*/
 
+	/**
+	 Adds resource by macro
+	*/
 	macro static public function addResource( e : ExprOf<String> ) {
 		var a : Array<String> = e.getValue().split("@");
 		if (a.length != 2)

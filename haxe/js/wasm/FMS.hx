@@ -17,9 +17,12 @@ class FMS {
 
 	public var vu8(default, null) : Uint8Array;
 
+	public var ongrows(default, null) : Array<Memory->Void>;
+
 	var output : js.html.DivElement;
 
 	function new( imports : Dynamic ) {
+		ongrows = [];
 		if (imports.env == null)
 			imports.env = {};
 		var env = imports.env;
@@ -246,7 +249,7 @@ class FMS {
 
 	public function defProc( msg : JMsg, wparam : Int, lparam : Int) : Int {
 		switch(msg) {
-		case J_ASSERT if (wparam >= 1024):
+		case J_ASSERT:
 			var s = "FILE: " + this.readUTF8(cast wparam, -1) + ", LINE: " + lparam;
 			throw new js.lib.Error(s);
 		case J_ABORT:
@@ -254,9 +257,10 @@ class FMS {
 		case J_MEMGROW:
 			view = new DataView(cmem.buffer);
 			vu8 = new Uint8Array(cmem.buffer);
+			for (grow in ongrows)
+				grow(cmem);
 		case J_PUTCHAR:
 			putchar(wparam);
-		default:
 		}
 		return 0;
 	}
