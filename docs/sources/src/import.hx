@@ -18,7 +18,7 @@ import Global.SIGN_WASM;
 import Global.SIGN_NSF;
 import Global.CHANNEL;
 import Global.SAMPLE_RATE;
-import Global.FRAME_COUNT;
+import Global.FRAME_COUNTLIMIT;
 import Global.GME_WORKER;
 
 import Global.CSS_INLINE_BLOCK;

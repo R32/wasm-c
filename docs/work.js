@@ -10,8 +10,8 @@ class GmeWorker extends AudioWorkletProcessor {
 			_gthis.onMessage(me);
 		};
 		_$FMS.init(opt.processorOptions.wasm,{ }).then(function(moi) {
-			_gthis.ptr16 = __lib.malloc(512);
-			_gthis.abi16 = new Int16Array(__fms.cmem.buffer,_gthis.ptr16,256);
+			_gthis.ptr16 = __lib.malloc(4096);
+			_gthis.abi16 = new Int16Array(__fms.cmem.buffer,_gthis.ptr16,2048);
 			let this1 = __lib.nsf_new(sampleRate);
 			_gthis.gme = this1;
 			__lib.gme_set_stereo_depth(_gthis.gme,1.0);
@@ -94,12 +94,13 @@ class GmeWorker extends AudioWorkletProcessor {
 		}
 		let outL = output[0][0];
 		let outR = output[0][1];
-		__lib.gme_play(this.gme,256,this.ptr16);
+		let size = outL.length;
+		__lib.gme_play(this.gme,size * 2,this.ptr16);
 		let src = this.abi16;
 		let i = 0;
 		let j = 0;
 		let v = this.vol;
-		while(i < 128) {
+		while(i < size) {
 			outL[i] = src[j++] * v;
 			outR[i] = src[j++] * v;
 			++i;
@@ -119,6 +120,7 @@ var __lib = null;
 var __fms = null;
 class _$FMS {
 	constructor(imports) {
+		this.ongrows = [];
 		if(imports.env == null) {
 			imports.env = { };
 		}
@@ -196,20 +198,19 @@ class _$FMS {
 	defProc(msg,wparam,lparam) {
 		switch(msg) {
 		case 9:
-			if(wparam >= 1024) {
-				throw new Error("FILE: " + this.readUTF8(wparam,-1) + ", LINE: " + lparam);
-			}
-			break;
+			throw new Error("FILE: " + this.readUTF8(wparam,-1) + ", LINE: " + lparam);
 		case 10:
 			throw new Error("" + wparam);
 		case 11:
 			this.view = new DataView(this.cmem.buffer);
 			this.vu8 = new Uint8Array(this.cmem.buffer);
+			let _g = 0;
+			let _g1 = this.ongrows;
+			while(_g < _g1.length) _g1[_g++](this.cmem);
 			break;
 		case 12:
 			this.putchar(wparam);
 			break;
-		default:
 		}
 		return 0;
 	}

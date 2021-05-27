@@ -6,8 +6,7 @@ import js.lib.Float32Array;
 import js.lib.Int16Array;
 import js.wasm.FMS;
 import js.wasm.Ptr;
-import js.wasm.CStub.lib;
-import js.wasm.CStub.fms;
+import js.wasm.CStub;
 import NsfHeader;
 import Message;
 
@@ -26,8 +25,8 @@ class GmeWorker extends AudioWorkletProcessor {
 		tellTime = endedTime = 0.;
 		port.onmessage = FUNC(onMessage);
 		FMS.init(opt.processorOptions.wasm,{}).then(function(moi) {
-			ptr16 = lib.malloc(FRAME_COUNT * CHANNEL * 2);
-			abi16 = new Int16Array(fms.cmem.buffer, ptr16, FRAME_COUNT * CHANNEL);
+			ptr16 = lib.malloc(FRAME_COUNTLIMIT * CHANNEL * 2);
+			abi16 = new Int16Array(fms.cmem.buffer, ptr16, FRAME_COUNTLIMIT * CHANNEL);
 			gme = new Gme(cast sampleRate);
 			gme.stereo(1.0);
 			loadNsf(opt.processorOptions.nsf);
@@ -102,14 +101,17 @@ class GmeWorker extends AudioWorkletProcessor {
 			postMessage(TrackEnded, gme.isEnded());
 			endedTime = now;
 		}
-		//
 		var outL = output[0][0];
 		var outR = output[0][1];
-		gme.play(FRAME_COUNT * CHANNEL, ptr16);
+		// Currently, audio data blocks are always 128 frames long—that is.
+		// However, plans are already in place to revise the specification to
+		// allow the size of the audio blocks to be changed depending on circumstances.
+		var size = outL.length;    // NOTE: Make sure that "FRAME_COUNTLIMIT" >= size
+		gme.play(size * CHANNEL, ptr16);
 		var src = abi16;
 		var i = 0, j = 0;
 		var v = vol;
-		while(i < FRAME_COUNT) {
+		while(i < size) {
 			outL[i] = src[j++] * v;
 			outR[i] = src[j++] * v;
 			i++;
