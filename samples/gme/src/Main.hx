@@ -6,6 +6,7 @@ import js.lib.Promise;
 import js.html.Response;
 import js.Browser.window;
 import js.wasm.FMS;
+import js.wasm.CStub;
 import Gme;
 
 class Main {
@@ -29,12 +30,9 @@ class Main {
 		nsf = haxe.Resource.getBytes("zelda").getData();
 		if (!WebAssembly.validate(buffer))
 			throw new js.lib.Error("invalid wasm");
-		var imports = {
-			env : {
-				jproc: player.onCCall
-			}
-		};
-		FMS.init(buffer, imports);
+		FMS.init(buffer, {}).then(function(moi){
+			fms.ongrows.push(player.onGrow);
+		});
 	#else
 		var list = ["gme.wasm", "Zelda 2.nsf"];
 		Promise.all(list.map(cast window.fetch)).then(function(ar) {
@@ -51,12 +49,9 @@ class Main {
 			}
 			if (!WebAssembly.validate(wasm))
 				throw new js.lib.Error("invalid wasm");
-			var imports = {
-				env : {
-					jproc: player.onCCall
-				}
-			};
-			FMS.init(wasm, imports);
+			FMS.init(wasm, {}).then(function(moi){
+				fms.ongrows.push(player.onGrow);
+			});
 		});
 	#end
 	}

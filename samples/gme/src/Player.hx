@@ -16,7 +16,7 @@ import js.wasm.Ptr;
 
 class Player {
 
-	static inline var SAMPLE_RATE = 44100;
+	static inline var SAMPLE_RATE = 22050;
 
 	/**
 	* 0 ~ 1.0
@@ -148,10 +148,8 @@ class Player {
 		}
 	}
 
-	public function onCCall( msg : JMsg, w : Int, l : Int ) : Int {
-		if (msg == J_MEMGROW && shout != Ptr.NUL)
-			tai16 = new Int16Array(fms.cmem.buffer, shout, SAMPLECOUNT * 2);  // count * ((2 * 2) / 2)
-		return fms.defProc(msg, w, l);
+	public function onGrow( mem : js.lib.webassembly.Memory ) {
+		tai16 = new Int16Array(mem.buffer, shout, SAMPLECOUNT * 2);  // count * ((2 * 2) / 2)
 	}
 
 	public static inline var SAMPLECOUNT  = 4096;
