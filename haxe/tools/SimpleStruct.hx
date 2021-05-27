@@ -139,7 +139,8 @@ class SimpleStruct {
 			idx.sizeof = 1; // sizeof(char)
 			setter = macro $fms.writeUTF8(this + $v{offset}, $v{idx.bytes}, v);
 			getter = macro $fms.readUTF8(this + $v{offset}, $v{idx.bytes});
-		case "UCS2String":
+		case "js.wasm.UCS2String":
+			ct = macro :String;
 			idx.count = idx.sizeof;
 			idx.sizeof = 2;
 			setter = macro $fms.writeUCS2(this + $v{offset}, $v{idx.bytes}, v);
