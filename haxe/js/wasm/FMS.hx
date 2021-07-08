@@ -100,6 +100,7 @@ class FMS {
 			max = view.byteLength;
 		} else {
 			a = js.Syntax.construct(Array, max >> 1); // size / sizeof(wchar_t)
+			a.resize(0);
 			max = ptr + max;
 		}
 		var c;
