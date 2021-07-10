@@ -8,9 +8,31 @@
 #include "stddef.h"
 #include "_javascript_call.h"
 
+/**
+ The starting position of the heap, uses `&__heap_base` to get its value
+*/
 extern const int __heap_base;
 
+/**
+ index : wasm currently only uses one memory block, so the value of index is "0"
+
+ return: The page size of the memory (each one is 64KiB)
+*/
+extern unsigned long __builtin_wasm_memory_size(int index);
+
+/**
+ index : 0
+
+ number: The number of pages you want to grow the memory by (each one is 64KiB in size).
+
+ return: The previous page size of the memory.
+*/
+extern unsigned long __builtin_wasm_memory_grow(int index, unsigned long number);
+
+
 #define PAGE_SIZE         (1024 * 64)
+
+#define memory_base()     ((int)&__heap_base)
 
 #define memory_size()     (__builtin_wasm_memory_size(0) * PAGE_SIZE)
 
@@ -37,7 +59,7 @@ static struct {
 	int max;
 	struct tag* FL[FREE_MAX + 1];
 } root = {
-	.pos = (int)&__heap_base,
+	.pos = memory_base(),
 	.max = 0,
 };
 
@@ -143,7 +165,7 @@ static inline void freetag(struct tag* tag) {
 }
 
 EM_EXPORT(realloc) void* realloc(void* ptr, int size) {
-	if ((int)ptr < (int)&__heap_base)
+	if ((int)ptr < memory_base())
 		return malloc(size); // if do realloc(0, size)
 	size = sz_align(size);
 	struct tag* tag = container_of(ptr, struct tag, __data__);
@@ -175,7 +197,7 @@ EM_EXPORT(realloc) void* realloc(void* ptr, int size) {
 }
 
 EM_EXPORT(free) void free(void* ptr) {
-	if ((int)ptr < (int)&__heap_base)
+	if ((int)ptr < memory_base())
 		return;
 	struct tag* tag = container_of(ptr, struct tag, __data__);
 	// if tag is at the end of

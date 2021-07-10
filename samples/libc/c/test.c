@@ -79,16 +79,44 @@ static void t_malloc() {
 	for(int i = 0; i < max / 2; i++) free(aptr[i]);
 }
 
+static void t_realloc() {
+	// copied from _malloc.c
+	struct tag {
+		int size;
+		void* __data__[0];
+	};
+	#define tag_of_ptr(ptr) container_of((void*)(ptr), struct tag, __data__)
+
+	const char* cstr = "0123456789abcdefLOL";
+	const int len = strlen(cstr);
+	char* org = malloc(32);
+	assert(tag_of_ptr(org)->size >= 32);
+	strcpy(org, cstr);
+	char* mid = realloc(org, 64);  // "org" has be released by realloc
+	assert(tag_of_ptr(mid)->size >= 64);
+	assert(strcmp(cstr, mid) == 0);
+
+	char* nop = malloc(32);
+	char* new = realloc(mid, 128); // "new" has be released by realloc
+	assert(new != mid);
+	assert(tag_of_ptr(new)->size >= 128);
+	assert(strcmp(cstr, new) == 0);
+	free(new);
+	free(nop);
+
+	// TODO:
+}
+
 static void t_memcpy() {
 	const int max = 128;
 	const int haf = max / 2;
 	char* p1 = malloc(sizeof(uint8_t) * max);
 	char* ph = p1 + haf;
-	const char* A_T = "ABCD EFGH IJKL MNOP QRST";
-	const int len = strlen(A_T);
+	const char* cstr = "ABCD EFGH IJKL MNOP QRST";
+	const int len = strlen(cstr);
 
-	strcpy(ph, A_T);
-	assert(memcmp(ph, A_T, len) == 0);
+	strcpy(ph, cstr);
+	assert(memcmp(ph, cstr, len) == 0);
 	// memcpy
 	memcpy(p1, ph, len);
 	assert(memcmp(p1, ph, len) == 0);
@@ -97,23 +125,23 @@ static void t_memcpy() {
 	assert(memcmp(p1 + 3, ph, len) == 0);
 
 	memmove(ph - 1, ph, len);
-	assert(memcmp(ph - 1, A_T, len) == 0);
+	assert(memcmp(ph - 1, cstr, len) == 0);
 
-	strcpy(ph, A_T); // reset
+	strcpy(ph, cstr); // reset
 	memmove(ph - sizeof(int), ph, len);
-	assert(memcmp(ph - sizeof(int), A_T, len) == 0);
+	assert(memcmp(ph - sizeof(int), cstr, len) == 0);
 
-	strcpy(ph, A_T); // reset
+	strcpy(ph, cstr); // reset
 	memmove(ph + 1, ph, len);
-	assert(memcmp(ph + 1, A_T, len) == 0);
+	assert(memcmp(ph + 1, cstr, len) == 0);
 
-	strcpy(ph, A_T); // reset
+	strcpy(ph, cstr); // reset
 	memmove(ph + sizeof(int), ph, len);
-	assert(memcmp(ph + sizeof(int), A_T, len) == 0);
+	assert(memcmp(ph + sizeof(int), cstr, len) == 0);
 
-	strcpy(ph, A_T); // reset
+	strcpy(ph, cstr); // reset
 	memmove(ph + len, ph, len);
-	assert(memcmp(ph + len, A_T, len) == 0);
+	assert(memcmp(ph + len, cstr, len) == 0);
 
 	free(p1);
 }
@@ -152,6 +180,7 @@ void t_math() {
 
 void test() {
 	int n = 10;
+	t_realloc();
 	while(n--)
 		t_malloc();
 	t_memcpy();
