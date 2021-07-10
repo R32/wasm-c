@@ -150,19 +150,19 @@ EM_EXPORT(realloc) void* realloc(void* ptr, int size) {
 	if (size <= TAG_DATASIZE(tag))
 		return ptr;
 	// detects if the tag is at the end of the memory
-	if ((int)TAG_DATABPTR(tag) + TAG_DATASIZE(tag) == root.pos) {
-		int diff = (int)TAG_DATABPTR(tag) + size - root.max;
+	if ((int)ptr + TAG_DATASIZE(tag) == root.pos) {
+		int diff = (int)ptr + size - root.max;
 		if (diff > 0) {
 			memory_grow(GROW_EXTRA + ALIGN_POW2(diff, PAGE_SIZE) / PAGE_SIZE);
 			root.max = memory_size();
 		}
-		root.pos = (int)TAG_DATABPTR(tag) + size;
+		root.pos = (int)ptr + size;
 		TAG_DATASIZE(tag) = size;
 		return ptr;
 	}
-	struct tag* new = malloc(size);
-	int* dst = (int*)TAG_DATABPTR(new);
-	int* src = (int*)TAG_DATABPTR(tag);
+	void* const new = malloc(size);
+	int* dst = (int*)new;
+	int* src = (int*)ptr;
 	int* max = src + TAG_DATASIZE(tag) / sizeof(int);
 	while(src < max) {
 		*dst++ = *src++;
@@ -171,7 +171,7 @@ EM_EXPORT(realloc) void* realloc(void* ptr, int size) {
 	#endif
 	}
 	freetag(tag);
-	return TAG_DATABPTR(new);
+	return new;
 }
 
 EM_EXPORT(free) void free(void* ptr) {
@@ -179,7 +179,7 @@ EM_EXPORT(free) void free(void* ptr) {
 		return;
 	struct tag* tag = container_of(ptr, struct tag, __data__);
 	// if tag is at the end of
-	if ((int)TAG_DATABPTR(tag) + TAG_DATASIZE(tag) == root.pos) {
+	if ((int)ptr + TAG_DATASIZE(tag) == root.pos) {
 		root.pos -= TAG_DATASIZE(tag) + sizeof(struct tag);
 	} else {
 		freetag(tag);
