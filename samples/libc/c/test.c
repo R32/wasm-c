@@ -105,6 +105,13 @@ static void t_realloc() {
 	free(nop);
 
 	// TODO:
+
+	// calloc
+	int* pint = calloc(32, sizeof(int));
+	assert(tag_of_ptr(pint)->size >= sizeof(int) * 32);
+	for(int i =0; i < 32; i++)
+		assert(pint[i] == 0);
+	free(pint);
 }
 
 static void t_memcpy() {
