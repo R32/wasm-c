@@ -95,19 +95,13 @@ static struct tag* fl_get(int size) {
 			curr = FREE_NEXT(curr);
 			continue;
 		}
-		rest -= sizeof(struct tag); // TAG_DATASIZE(next_tag)
-		if (rest >= BLK_BASE) {     // Do Split
+		rest -= sizeof(struct tag);
+		if (rest >= size) { // Do Splits
 			struct tag* fork = (struct tag*)(TAG_DATABPTR(curr) + size);
 			TAG_DATASIZE(curr) = size;
 			TAG_DATASIZE(fork) = rest;
-			int j = fl_index(rest);
-			if (j < FREE_MAX) {
-				FREE_NEXT(fork) = FREE_ROOT(j);
-				FREE_ROOT(j) = fork;
-			} else {
-				FREE_NEXT(fork) = FREE_NEXT(curr);
-				FREE_NEXT(curr) = fork;
-			}
+			FREE_NEXT(fork) = FREE_NEXT(curr);
+			FREE_NEXT(curr) = fork;
 		}
 		if (prev) {
 			FREE_NEXT(prev) = FREE_NEXT(curr);
