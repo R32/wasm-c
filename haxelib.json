@@ -3,9 +3,9 @@
 	"classPath": "haxe",
 	"url" : "https://github.com/r32/wasm-c",
 	"license" : "MIT",
-	"description" : "Compiling C to WebAssembly without Emscripten",
+	"description" : "The haxe part of the stripped-down C standard library only for wasm",
 	"version" : "0.1.0",
-	"releasenote" : "",
+	"releasenote" : "Some testing left to do but looks ok so far",
 	"contributors" : ["r32"],
 	"dependencies" : {}
 }
