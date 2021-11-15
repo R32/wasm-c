@@ -15,8 +15,8 @@
 #define EXIT_FAILURE                 1
 #define RAND_MAX                     (0x7fffffff)
 #define mblen(mbs, mb)               strnlen(mbs, len)
-#define mbstowcs(dst, src, mb)       u_towcs(dst, src, mb)
-#define wcstombs(dst, src, wc)       wcsto_u(dst, src, wc)
+#define mbstowcs(dest, src, max)     u_towcs(dest, src, max)
+#define wcstombs(dest, src, max)     wcsto_u(dest, src, max)
 #define atoi(s)                      atol(s)
 #define atof(str)                    strtod(str, NULL)
 

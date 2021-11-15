@@ -5,11 +5,12 @@
 #ifndef __UCS2_H
 #define __UCS2_H    1
 #include "_cdefs.h"
+#include "wchar.h"
 C_FUNCTION_BEGIN
 
-int wcsto_u(char* dst, const unsigned short* src, int cw);
+int wcsto_u(char* dest, const wchar_t* src, size_t max);
 
-int u_towcs(unsigned short* dst, const char* src, int cb);
+int u_towcs(wchar_t* dest, const char* src, size_t max);
 
 C_FUNCTION_END
 #endif

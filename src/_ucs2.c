@@ -6,24 +6,22 @@
 #include "stddef.h"
 
 /**
- NOTE: the resulting string stored in dst is not null-terminated.
+ wchar_t* to UTF8
 
- cw means wchar length for src
+ @param max: Maximum number of bytes to be written to dest.
 */
-int wcsto_u(char* dst, const unsigned short* src, int cw) {
+int wcsto_u(char* dst, const wchar_t* src, size_t max) {
 	int c;
-	int i = 0;
-	const unsigned short* const end = src + (cw > 0 ? cw : 0x7fffffff);
-	if (dst == NULL || cw == 0) {
-		while(src < end && (c = *src++)) {
+	size_t i = 0;
+	if (dst == NULL || max == 0) {
+		while((c = *src++)) {
 			if (c < 0x80) {
 				i++;
 			} else if (c < 0x800) {
 				i += 2;
 			} else if (c >= 0xD800 && c <= 0xDFFF) {
-				if (src == end)
+				if (*src++ == 0)
 					break;
-				src++;
 				i += 4;
 			} else {
 				i += 3;
@@ -31,40 +29,42 @@ int wcsto_u(char* dst, const unsigned short* src, int cw) {
 		}
 		return i;
 	}
-	int k;
-	while(src < end && (c = *src++)) {
+	int k, c2;
+	while(i < max && (c = *src++)) {
 		if (c < 0x80) {
 			dst[i++] = c;
 		} else if (c < 0x800) {
 			dst[i++] = (0xC0 | (c >> 6));
 			dst[i++] = (0x80 | (c & 63));
 		} else if (c >= 0xD800 && c <= 0xDFFF) {
-			if (src == end)
+			c2 = *src++;
+			if (!c2)
 				break;
-			k = (((c - 0xD800) << 10) | (((int)*src++) - 0xDC00)) + 0x10000;
-			dst[i++] = 0xF0 |(k>>18);
+			k = (((c - 0xD800) << 10) | (c2 - 0xDC00)) + 0x10000;
+			dst[i++] = 0xF0 |  (k >> 18);
 			dst[i++] = 0x80 | ((k >> 12) & 63);
 			dst[i++] = 0x80 | ((k >> 6) & 63);
-			dst[i++] = 0x80 | (k & 63);
+			dst[i++] = 0x80 |  (k & 63);
 		} else {
-			dst[i++] = 0xE0 | (c >> 12);
+			dst[i++] = 0xE0 |  (c >> 12);
 			dst[i++] = 0x80 | ((c >> 6) & 63);
-			dst[i++] = 0x80 | (c & 63);
+			dst[i++] = 0x80 |  (c & 63);
 		}
 	}
+	if (i < max)
+		dst[i] = 0;
 	return i;
 }
 
 /**
- NOTE: the resulting string stored in dst is not null-terminated.
+ UTF8 to wchar_t*
 
- cb means byte length for src
+ @param max: maximum number of wchar_t characters to write to dest
 */
-int u_towcs(unsigned short* dst, const char* src, int cb) {
-	int acc = 0, c, c2, c3, c4;
-	const char* const end = src + (cb > 0 ? cb : 0x7fffffff);
-	if (dst == NULL || cb == 0) {
-		while ((src < end) && (c = *src++)) {
+int u_towcs(wchar_t* dest, const char* src, size_t max) {
+	size_t acc = 0, c, c2, c3, c4;
+	if (dest == NULL || max == 0) {
+		while ((c = *src++)) {
 			if (c < 0x80) {
 			} else if (c < 0xE0) {
 				if(!(0x80 & (*src++)))
@@ -87,7 +87,7 @@ int u_towcs(unsigned short* dst, const char* src, int cb) {
 		}
 		return acc;
 	}
-	while ((src < end) && (c = *src++)) {
+	while ((acc < max) && (c = *src++)) {
 		if (c < 0x80) {
 		} else if (c < 0xC0) {
 			break;
@@ -109,11 +109,13 @@ int u_towcs(unsigned short* dst, const char* src, int cb) {
 			if (!(c2 & c3 & c4 & 0x80))
 				break;
 			c = ((c & 0x0F) << 18) | ((c2 & 0x7F) << 12) | ((c3 & 0x7F) << 6) | (c4 & 0x7F);
-			dst[acc++] = (c >> 10) + 0xD7C0;
-			dst[acc++] = (c & 0x3FF) + 0xDC00;
+			dest[acc++] = (c >> 10) + 0xD7C0;
+			dest[acc++] = (c & 0x3FF) + 0xDC00;
 			continue;
 		}
-		dst[acc++] = c;
+		dest[acc++] = c;
 	}
+	if (acc < max)
+		dest[acc] = 0;
 	return acc;
 }
