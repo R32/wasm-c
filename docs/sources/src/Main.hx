@@ -254,9 +254,9 @@ class Main {
 
 @:build(Nvd.build("../index.html", "#player", {
 
-	btngroup  : $(".btn-group", BtnGroupUi),
-	progress  : $(".progress-bar", ProgressUi),
-	fileopen  : $(".file-open", FileOpenUi),
+	btngroup  : ($(".btn-group") : BtnGroupUi),
+	fileopen  : ($(".file-open") : FileOpenUi),
+	progress  : ($(".progress-bar") : ProgressUi),
 
 })) extern abstract PlayerUi(nvd.Comp) {
 }

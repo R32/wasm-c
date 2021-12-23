@@ -9,7 +9,7 @@
 
 ### AudioWorkletNode
 --each
--lib no-vdom
+-lib no-vdom:0.8.0
 -main Main
 -js ../main.js
 
