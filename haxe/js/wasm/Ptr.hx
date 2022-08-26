@@ -11,6 +11,6 @@ extern abstract Ptr(Int) to Int {
 	public static inline var NUL : Ptr = cast 0;
 }
 
-// it's used for macro
+// for tools/simpleStruct
 @:coreType
 extern abstract UCS2String {}

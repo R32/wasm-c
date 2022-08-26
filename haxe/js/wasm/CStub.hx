@@ -4,7 +4,7 @@ package js.wasm;
 @:keep @:native("__fms") var fms(default, null) : FMS;
 
 /**
- This class is only used for macro, except the `.select` field
+ This class is only used for macro
 */
 extern class CStub {
 	public static inline function select( c : CLib, f : FMS ) : Void {

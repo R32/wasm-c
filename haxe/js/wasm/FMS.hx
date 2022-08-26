@@ -60,7 +60,7 @@ class FMS {
 		var a = [];
 		var i = 0;
 		var c, c2, c3, c4;
-		inline function CHAR(p) return view.getUint8(p);
+		inline function CHAR(p) return vu8[p];
 		while((ptr : Int) < max) {
 			c = CHAR(ptr++);
 			if (c < 0x80) {
@@ -248,11 +248,13 @@ class FMS {
 		}
 	}
 
-	public function defProc( msg : JMsg, wparam : Int, lparam : Int) : Int {
+	public function defProc( msg : JMsg, wparam : Int, lparam : Int ) : Int {
 		switch(msg) {
 		case J_ASSERT:
+		#if DEBUG
 			var s = "FILE: " + this.readUTF8(cast wparam, -1) + ", LINE: " + lparam;
 			throw new js.lib.Error(s);
+		#end
 		case J_ABORT:
 			throw new js.lib.Error("" + wparam);
 		case J_MEMGROW:
@@ -267,6 +269,7 @@ class FMS {
 	}
 
 	function putchar( c ) {
+	// If compiled without --no-traces
 	#if !no_traces
 		if (output == null) {
 			var id = "wasm_cout";

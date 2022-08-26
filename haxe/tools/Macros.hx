@@ -15,7 +15,7 @@ class Macros {
 #end
 
 	/**
-	 wrap into function to avoid haxe $bind
+	 Wraps function to avoid haxe $bind
 
 	 ```haxe
 	 btn.onclick = FUNC(onClick);
