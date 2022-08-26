@@ -1,5 +1,5 @@
 #
-WASMTOOLS ?= /cygdrive/e/SDKS/wasm
+WASMTOOLS ?= /cygdrive/c/SDKS/llvm-wasm
 CC        := $(WASMTOOLS)/clang
 CXX       := $(WASMTOOLS)/clang -x c++
 LD        := $(WASMTOOLS)/wasm-ld

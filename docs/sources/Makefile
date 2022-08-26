@@ -7,7 +7,7 @@ CSS        := $(OUTDIR)/style.css
 BUILD      ?= RELEASE
 #########################
 ifeq ($(BUILD),RELEASE)
-  CSSFLAGS := --minify
+  CSSFLAGS :=
   JSFLAGS  :=
 else
   CSSFLAGS := --sourcemap

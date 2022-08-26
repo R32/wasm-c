@@ -10,7 +10,7 @@ import js.wasm.FMS;
 import js.wasm.CStub;
 
 //@:eager
-typedef MyExports = wasm.TypedExports < "bin/app.wasm" > ;
+typedef MyExports = wasm.TypedExports<"bin/app.wasm"> ;
 
 class Main {
 	function eq( b, ?pos : haxe.PosInfos ) {
@@ -64,7 +64,6 @@ class Main {
 	}
 
 	static function main() {
-		//wasm.Tools.getImports( "bin/app.wasm" );
 		new Main();
 	}
 }

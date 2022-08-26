@@ -38,7 +38,7 @@ class Main {
 		Promise.all(list.map(cast window.fetch)).then(function(ar) {
 			return Promise.all(ar.map( r -> r.arrayBuffer() ));
 		}).then(function( ab ) {
-			var wasm = null;
+			var wasm : ArrayBuffer = null;
 			var sign = new js.lib.Int32Array(ab[0], 0, 1);
 			if (sign[0] == ('a'.code << 8 | 's'.code << 16 | 'm'.code << 24)) {
 				wasm = ab[0];
@@ -49,7 +49,8 @@ class Main {
 			}
 			if (!WebAssembly.validate(wasm))
 				throw new js.lib.Error("invalid wasm");
-			FMS.init(wasm, {}).then(function(moi){
+
+			FMS.init(wasm, {}).then(function(moi) {
 				fms.ongrows.push(player.onGrow);
 			});
 		});

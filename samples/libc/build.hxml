@@ -3,7 +3,7 @@
 -cp ../../haxe
 -D analyzer-optimize
 -D old-error-format
-# -D no_traces
+# --no-traces
 # -D print-wasm
 -D LOCAL
 -main Main

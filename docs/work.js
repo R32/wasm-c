@@ -157,28 +157,28 @@ class _$FMS {
 		let c3;
 		let c4;
 		while(ptr < max) {
-			c = this.view.getUint8(ptr++);
+			c = this.vu8[ptr++];
 			if(c < 128) {
 				if(c == 0) {
 					break;
 				}
 			} else if(c < 224) {
-				c2 = this.view.getUint8(ptr++);
+				c2 = this.vu8[ptr++];
 				if((c2 & 128) == 0) {
 					break;
 				}
 				c = (c & 63) << 6 | c2 & 127;
 			} else if(c < 240) {
-				c2 = this.view.getUint8(ptr++);
-				c3 = this.view.getUint8(ptr++);
+				c2 = this.vu8[ptr++];
+				c3 = this.vu8[ptr++];
 				if((c2 & c3 & 128) == 0) {
 					break;
 				}
 				c = (c & 31) << 12 | (c2 & 127) << 6 | c3 & 127;
 			} else {
-				c2 = this.view.getUint8(ptr++);
-				c3 = this.view.getUint8(ptr++);
-				c4 = this.view.getUint8(ptr++);
+				c2 = this.vu8[ptr++];
+				c3 = this.vu8[ptr++];
+				c4 = this.vu8[ptr++];
 				if((c2 & c3 & c4 & 128) == 0) {
 					break;
 				}
@@ -197,7 +197,7 @@ class _$FMS {
 	defProc(msg,wparam,lparam) {
 		switch(msg) {
 		case 9:
-			throw new Error("FILE: " + this.readUTF8(wparam,-1) + ", LINE: " + lparam);
+			break;
 		case 10:
 			throw new Error("" + wparam);
 		case 11:

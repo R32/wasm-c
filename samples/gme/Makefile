@@ -14,7 +14,7 @@ EXPORTS    += gme_set_tempo gme_set_stereo_depth
 LIBCROOT   ?= ../..
 
 # tools
-WASMTOOLS  ?= /cygdrive/e/SDKS/wasm
+WASMTOOLS  ?= /cygdrive/c/SDKS/llvm-wasm
 CC         := $(WASMTOOLS)/clang.exe
 CXX        := $(CC) -x c++
 AR         := $(WASMTOOLS)/llvm-ar.exe

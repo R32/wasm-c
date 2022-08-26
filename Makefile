@@ -1,5 +1,5 @@
 # config your WASMTOOLS path
-WASMTOOLS ?= /cygdrive/e/SDKS/wasm
+WASMTOOLS ?= /cygdrive/c/SDKS/llvm-wasm
 CC        := $(WASMTOOLS)/clang.exe
 CXX       := $(CC) -x c++
 AR        := $(WASMTOOLS)/llvm-ar.exe

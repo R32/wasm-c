@@ -1,12 +1,12 @@
 #
-WASMTOOLS ?= /cygdrive/e/SDKS/wasm
+WASMTOOLS ?= /cygdrive/c/SDKS/llvm-wasm
 CC        := $(WASMTOOLS)/clang
 CXX       := $(WASMTOOLS)/clang -x c++
 LD        := $(WASMTOOLS)/wasm-ld
 OPT       := $(WASMTOOLS)/wasm-opt
 
 # Force exports
-EXPORTS   := malloc
+EXPORTS   :=
 LIBCROOT  ?= ../..
 BUILD     ?= RELEASE
 #########################

@@ -3,5 +3,6 @@
 -D analyzer-optimize
 
 --resource bin/app.wasm@wasm
+--macro exclude('haxe.iterators.ArrayIterator')
 -main Main
 -js bin/app.js
