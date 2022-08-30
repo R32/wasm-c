@@ -20,9 +20,9 @@ class Reader {
 
 	function readWASM() {
 		if (readInt32() != wasm.sign)
-			throw "non-wasm file";
+			throw "Invalid wasm header";
 		readInt32(); // skip version
-		while(true) {
+		while (true) {
 			var sec = new Section();
 			sec.id = cast readByte();
 			sec.bytes = readLEB();
