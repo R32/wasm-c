@@ -251,7 +251,7 @@ class FMS {
 	public function defProc( msg : JMsg, wparam : Int, lparam : Int ) : Int {
 		switch(msg) {
 		case J_ASSERT:
-		#if DEBUG
+		#if debug
 			var s = "FILE: " + this.readUTF8(cast wparam, -1) + ", LINE: " + lparam;
 			throw new js.lib.Error(s);
 		#end
