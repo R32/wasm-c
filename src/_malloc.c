@@ -18,7 +18,7 @@ extern const int __heap_base;
 
  return: The page size of the memory (each one is 64KiB)
 */
-extern unsigned long __builtin_wasm_memory_size(int index);
+extern size_t __builtin_wasm_memory_size(int index);
 
 /**
  index : 0
@@ -27,56 +27,52 @@ extern unsigned long __builtin_wasm_memory_size(int index);
 
  return: The previous page size of the memory.
 */
-extern unsigned long __builtin_wasm_memory_grow(int index, unsigned long number);
-
-
-#define PAGE_SIZE         (1024 * 64)
-
-#define memory_base()     ((int)&__heap_base)
-
-#define memory_size()     (__builtin_wasm_memory_size(0) * PAGE_SIZE)
-
-#define memory_grow(page) ({             \
-    __builtin_wasm_memory_grow(0, page); \
-    js_sendmsg(J_MEMGROW, 0, 0);         \
-})
+extern size_t __builtin_wasm_memory_grow(int index, size_t number);
 
 struct tag {
 	int size;
 	void* __data__[0];
 };
 
+#define TAG_BYTES(ptag)   ((ptag)->size + sizeof(struct tag))
+#define TAG_OF_ALLOC(ptr) (container_of(ptr, struct tag, __data__))
 #define TAG_DATABPTR(tag) ((unsigned char*)&(tag)->__data__)
 #define TAG_DATASIZE(tag) ((tag)->size)
 #define FREE_NEXT(tag)    ((tag)->__data__[0])
 #define FREE_ROOT(idx)    (root.FL[idx])
-#define FREE_MAX          10
-#define BLK_BASE          8
+#define FREE_MAX          (10)
+#define BLK_BASE          (16)
+
+#define PAGE_SIZE         (1024 * 64)
+// This aligns the "ptr" returned by "malloc"
+#define memory_base()     (((size_t)&__heap_base) + (BLK_BASE - sizeof(struct tag)))
+#define memory_size()     (__builtin_wasm_memory_size(0) * PAGE_SIZE)
+#define memory_grow(page) do {           \
+    __builtin_wasm_memory_grow(0, page); \
+    js_sendmsg(J_MEMGROW, 0, 0);         \
+} while(0)
 
 // memory root
 static struct {
-	int pos;
-	int max;
+	size_t pos;
+	size_t max;
 	struct tag* FL[FREE_MAX + 1];
 } root = {
 	.pos = memory_base(),
 	.max = 0,
 };
 
-#define NOT_POW2(size, pow2)   (size & (pow2 - 1))
-#define ALIGN_POW2(size, pow2) ((((size) - 1) | (pow2 - 1)) + 1)
+#define NOT_ALIGNED(size, pow2)    (size & (pow2 - 1))
+#define ALIGN_POW2(size, pow2)     ((((size) - 1) | (pow2 - 1)) + 1)
 
 static inline int sz_align(int size) {
-	if (size < BLK_BASE) {
-		size = BLK_BASE;
-	} else if (NOT_POW2(size, BLK_BASE)) {
-		size = ALIGN_POW2(size, BLK_BASE);
-	}
-	return size;
+	if (size < BLK_BASE)
+		return BLK_BASE;
+	return ALIGN_POW2(size, BLK_BASE);
 }
 
-static inline int fl_index(int mul8) {
-	int idx = (mul8 / BLK_BASE) - 1;
+static inline int fl_index(int size) {
+	int idx = (size / BLK_BASE) - 1;
 	return idx < FREE_MAX ? idx : FREE_MAX;
 }
 
@@ -88,18 +84,17 @@ static struct tag* fl_get(int size) {
 		return curr;
 	}
 	struct tag* prev = NULL;
-	while(curr) {
-		int rest = TAG_DATASIZE(curr) - size;
-		if (rest < 0) {
+	while (curr) {
+		int full = TAG_BYTES(curr);
+		if (full < size) {
 			prev = curr;
 			curr = FREE_NEXT(curr);
 			continue;
 		}
-		rest -= sizeof(struct tag);
-		if (rest >= size) { // Do Splits
-			struct tag* fork = (struct tag*)(TAG_DATABPTR(curr) + size);
-			TAG_DATASIZE(curr) = size;
-			TAG_DATASIZE(fork) = rest;
+		if (full >= size + (BLK_BASE * (FREE_MAX + 1))) { // Do Splits
+			struct tag* fork = (struct tag*)((char*)curr + size);
+			TAG_DATASIZE(curr) = size - sizeof(struct tag);
+			TAG_DATASIZE(fork) = full - sizeof(struct tag) - size;
 			FREE_NEXT(fork) = FREE_NEXT(curr);
 			FREE_NEXT(curr) = fork;
 		}
@@ -116,16 +111,15 @@ static struct tag* fl_get(int size) {
 #define GROW_EXTRA    1
 
 EM_EXPORT(malloc) void* malloc(int size) {
-	size = sz_align(size);
+	size = sz_align(size + sizeof(struct tag));
 	struct tag* tag = fl_get(size);
 	if (tag)
 		return TAG_DATABPTR(tag);
 	int diff;
-	int fullsize = size + sizeof(struct tag);
 Recalc:
-	diff = root.pos + fullsize - root.max;
+	diff = root.pos + size - root.max;
 	if (diff > 0) {
-		if (root.max == 0) {
+		if (!root.max) {
 			root.max = memory_size();
 			goto Recalc;
 		}
@@ -134,69 +128,66 @@ Recalc:
 		root.max = memory_size();
 	}
 	tag = (struct tag*)root.pos;
-	TAG_DATASIZE(tag) = size;
-	root.pos += fullsize;
+	TAG_DATASIZE(tag) = size - sizeof(struct tag);
+	root.pos += size;
 	return TAG_DATABPTR(tag);
 }
 
 EM_EXPORT(calloc) void* calloc(int count, int elem) {
-	int size = sz_align(count * elem);
-	int* const ptr = malloc(size);
-	int*       end = ptr + (size / sizeof(int)) - 1;
-	while(end >= ptr) {
-		*end-- = 0;
-	#if (BLK_BASE >= 8)
-		*end-- = 0;
-	#endif
+	void *const ptr = malloc(count * elem);
+	int *i = ptr;
+	int *const max = i + (TAG_DATASIZE(TAG_OF_ALLOC(ptr)) / sizeof(int));
+	while (i < max) {
+		*i++ = 0;
 	}
 	return ptr;
 }
 
 static inline void freetag(struct tag* tag) {
-	int idx = fl_index(TAG_DATASIZE(tag));
+	int idx = fl_index(TAG_BYTES(tag));
 	FREE_NEXT(tag) = FREE_ROOT(idx);
 	FREE_ROOT(idx) = tag;
 }
 
 EM_EXPORT(realloc) void* realloc(void* ptr, int size) {
-	if ((int)ptr < memory_base())
-		return malloc(size); // if do realloc(0, size)
-	size = sz_align(size);
-	struct tag* tag = container_of(ptr, struct tag, __data__);
-	if (size <= TAG_DATASIZE(tag))
+	if (ptr == NULL)
+		return malloc(size);
+	if ((size_t)ptr < memory_base() || NOT_ALIGNED((size_t)ptr, BLK_BASE))
+		return NULL;
+
+	size = sz_align(size + sizeof(struct tag));
+	struct tag* tag = TAG_OF_ALLOC(ptr);
+	if (size <= TAG_BYTES(tag))
 		return ptr;
 	// detects if the tag is at the end of the memory
-	if ((int)ptr + TAG_DATASIZE(tag) == root.pos) {
-		int diff = (int)ptr + size - root.max;
+	if ((size_t)ptr + TAG_DATASIZE(tag) == root.pos) {
+		int diff = (size_t)tag + size - root.max;
 		if (diff > 0) {
 			memory_grow(GROW_EXTRA + ALIGN_POW2(diff, PAGE_SIZE) / PAGE_SIZE);
 			root.max = memory_size();
 		}
-		root.pos = (int)ptr + size;
-		TAG_DATASIZE(tag) = size;
+		root.pos = (size_t)tag + size;
+		TAG_DATASIZE(tag) = size - sizeof(struct tag);
 		return ptr;
 	}
-	void* const new = malloc(size);
+	void* const new = malloc(size - sizeof(struct tag));
 	int* dst = (int*)new;
 	int* src = (int*)ptr;
 	int* max = src + TAG_DATASIZE(tag) / sizeof(int);
 	while(src < max) {
 		*dst++ = *src++;
-	#if (BLK_BASE >= 8)
-		*dst++ = *src++;
-	#endif
 	}
 	freetag(tag);
 	return new;
 }
 
 EM_EXPORT(free) void free(void* ptr) {
-	if ((int)ptr < memory_base())
+	if ((size_t)ptr < memory_base() || NOT_ALIGNED((size_t)ptr, BLK_BASE))
 		return;
-	struct tag* tag = container_of(ptr, struct tag, __data__);
+	struct tag* tag = TAG_OF_ALLOC(ptr);
 	// if tag is at the end of
-	if ((int)ptr + TAG_DATASIZE(tag) == root.pos) {
-		root.pos -= TAG_DATASIZE(tag) + sizeof(struct tag);
+	if ((size_t)ptr + TAG_DATASIZE(tag) == root.pos) {
+		root.pos -= TAG_BYTES(tag);
 	} else {
 		freetag(tag);
 	}
