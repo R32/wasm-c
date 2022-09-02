@@ -14,6 +14,9 @@
 #include "WASM.h"
 
 // Only used for pointers returned by malloc
+#define BLK_BASE           (16)
+#define IS_ALIGNED(ptr)    (((size_t)(ptr) & (BLK_BASE - 1)) == 0)
+
 #define PTRSIZE(ptr)       (*(((int*)(ptr)) - 1))
 
 // [min, max)
@@ -33,7 +36,17 @@ static void shuffle(char* a[], int len) {
 int ptr_intersect(const void* aa, const void* bb) {
 	char* a = *(char**)aa;
 	char* b = *(char**)bb;
-	assert(PTRSIZE(a) <= 1024 && PTRSIZE(b) <= 1024);
+
+	assert(IS_ALIGNED(a));
+
+	assert(IS_ALIGNED(b));
+
+	const int MAX = 1036; // ALIGN_16(1024 + sizeof(struct tag)) - sizeof(struct tag);
+
+	assert(PTRSIZE(a) <= MAX);
+
+	assert(PTRSIZE(b) <= MAX);
+
 	if (a > b) {
 		assert(b + PTRSIZE(b) < a);
 	} else if (a < b) {
@@ -92,12 +105,13 @@ static void t_realloc() {
 	char* org = malloc(32);
 	assert(tag_of_ptr(org)->size >= 32);
 	strcpy(org, cstr);
-	char* mid = realloc(org, 64);  // "org" has be released by realloc
+
+	char* mid = realloc(org, 64);  // "org" will be released by realloc
 	assert(tag_of_ptr(mid)->size >= 64);
 	assert(strcmp(cstr, mid) == 0);
 
 	char* nop = malloc(32);
-	char* new = realloc(mid, 128); // "new" has be released by realloc
+	char* new = realloc(mid, 128); // "mid" will be released by realloc
 	assert(new != mid);
 	assert(tag_of_ptr(new)->size >= 128);
 	assert(strcmp(cstr, new) == 0);
@@ -186,10 +200,15 @@ void t_math() {
 }
 
 void test() {
-	int n = 10;
 	t_realloc();
+	int n = 10;
 	while(n--)
 		t_malloc();
+	printf("malloc test done.\n");
+
 	t_memcpy();
+	printf("memory test done.\n");
+
 	t_math();
+	printf("  math test done.\n");
 }

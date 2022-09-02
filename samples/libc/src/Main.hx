@@ -36,7 +36,6 @@ class Main {
 		};
 		trace(Npc.POS_HEALTH, Npc.POS_NAME);
 	#if LOCAL
-		wasm.Tools.addResource("bin/app.wasm@wasm");
 		trace("embed wasm");
 		var buffer = haxe.Resource.getBytes("wasm").getData();
 		if (!WebAssembly.validate(buffer))

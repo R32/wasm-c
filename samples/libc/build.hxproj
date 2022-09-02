@@ -25,7 +25,7 @@
     <option noInlineOnDebug="False" />
     <option mainClass="Main" />
     <option enabledebug="True" />
-    <option additional="-dce full" />
+    <option additional="-dce full&#xA;--resource &quot;bin/app.wasm@wasm&quot;" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>

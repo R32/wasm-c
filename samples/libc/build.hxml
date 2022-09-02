@@ -1,3 +1,4 @@
+--debug
 -dce full
 -cp src
 -cp ../../haxe
@@ -6,5 +7,6 @@
 # --no-traces
 # -D print-wasm
 -D LOCAL
+--resource "bin/app.wasm@wasm"
 -main Main
 -js bin/app.js
