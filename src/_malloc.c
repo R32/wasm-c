@@ -40,8 +40,8 @@ struct tag {
 #define TAG_DATASIZE(tag) ((tag)->size)
 #define FREE_NEXT(tag)    ((tag)->__data__[0])
 #define FREE_ROOT(idx)    (root.FL[idx])
-#define FREE_MAX          (10)
-#define BLK_BASE          (16)
+#define FREE_MAX          (12)
+#define BLK_BASE          ( 8)
 
 #define PAGE_SIZE         (1024 * 64)
 // This aligns the "ptr" returned by "malloc"

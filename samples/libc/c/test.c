@@ -14,7 +14,7 @@
 #include "WASM.h"
 
 // Only used for pointers returned by malloc
-#define BLK_BASE           (16)
+#define BLK_BASE           (8)
 #define IS_ALIGNED(ptr)    (((size_t)(ptr) & (BLK_BASE - 1)) == 0)
 
 #define PTRSIZE(ptr)       (*(((int*)(ptr)) - 1))
@@ -41,7 +41,7 @@ int ptr_intersect(const void* aa, const void* bb) {
 
 	assert(IS_ALIGNED(b));
 
-	const int MAX = 1036; // ALIGN_16(1024 + sizeof(struct tag)) - sizeof(struct tag);
+	const int MAX = 1028; // ALIGN__8(1024 + sizeof(struct tag)) - sizeof(struct tag);
 
 	assert(PTRSIZE(a) <= MAX);
 
