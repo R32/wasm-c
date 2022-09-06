@@ -10,7 +10,7 @@ INCLUDES  := -Iinclude
 SOURCES   := ctype.c errno.c locale.c string.c time.c stdlib.c wchar.c
 SOURCES   += _ucs2.c _malloc.c rand.c strtol.c
 SOURCES   += stdio.c printf.c
-OBJS      := $(addprefix $(OBJDIR)/, $(SOURCES:.c=.o))
+OBJS      := $(SOURCES:%.c=$(OBJDIR)/%.o)
 
 # for simple c++, don't put the cpp objs together with OBJS
 CXXOBJS   := $(OBJDIR)/new.oo
@@ -21,7 +21,7 @@ all: $(OBJDIR) $(LIBDIR) $(TARGET)
 
 # libwasmc
 $(TARGET): $(OBJS) $(CXXOBJS)
-	@$(AR) rcs $@ $^
+	@$(AR) rcs $@ $?
 	@echo Archived $@
 
 $(LIBDIR):
@@ -36,7 +36,7 @@ clean:
 .PHONY: clean all
 
 # Global compiler flags
-CCFLAGS     := -Ofast -std=c99 -nostdinc
+CFLAGS      := -Ofast -std=c99 -nostdinc
 CXXFLAGS    := -Ofast -std=c++11 -nostdinc++ -fno-rtti -Wno-writable-strings -Wno-unknown-pragmas
 
 # Global compiler flags for Wasm targeting
@@ -48,7 +48,7 @@ vpath %.h include
 vpath %.c src
 
 $(OBJDIR)/%.o: %.c
-	@$(CC) $(CCFLAGS) $(CLANGFLAGS) -o $@ -c $<
+	@$(CC) $(CFLAGS) $(CLANGFLAGS) -o $@ -c $<
 	@echo Compile $< TO $@
 
 $(OBJDIR)/ctype.o: ctype.c ctype.h

@@ -21,7 +21,7 @@ OUTDIR    := bin
 OBJDIR    := obj
 INCLUDES  :=
 SOURCES   := main.c
-OBJS      := $(addprefix $(OBJDIR)/, $(SOURCES:.c=.o))
+OBJS      := $(SOURCES:%.c=$(OBJDIR)/%.o)
 WASM      := $(OUTDIR)/app.wasm
 JS        := $(OUTDIR)/app.js
 
@@ -52,7 +52,7 @@ clean:
 
 # Global compiler flags
 # CXXFLAGS    := -Ofast -std=c++11 -fno-rtti -Wno-writable-strings -Wno-unknown-pragmas
-CCFLAGS     := -Ofast -std=c99
+CFLAGS      := -Ofast -std=c99
 
 # Global compiler flags for Wasm targeting
 CLANGFLAGS  := -target wasm32 -nostdinc++ -flto -D__EMSCRIPTEN__ -fshort-wchar
@@ -64,7 +64,7 @@ vpath %.h c
 vpath %.c c
 
 $(OBJDIR)/%.o: %.c
-	@$(CC) $(CCFLAGS) $(CLANGFLAGS) -o $@ -c $<
+	@$(CC) $(CFLAGS) $(CLANGFLAGS) -o $@ -c $<
 	@echo Compile $< TO $@
 
 $(OBJDIR)/main.o: main.c

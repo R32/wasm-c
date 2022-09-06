@@ -44,9 +44,9 @@ INCLUDES   := -I$(SOURCES)
 
 OBJDIR     := $(GMEDIR)/obj
 CXXFILES   := $(notdir $(wildcard $(SOURCES)/*.cpp))
-CXXOBJS    := $(addprefix $(OBJDIR)/, $(CXXFILES:.cpp=.o))
+CXXOBJS    := $(CXXFILES:%.cpp=$(OBJDIR)/%.o)
 
-CCFLAGS    := -Ofast -std=c99 -nostdinc
+CFLAGS     := -Ofast -std=c99 -nostdinc
 CXXFLAGS   := -Ofast -std=c++11 -nostdinc++ -fno-rtti -Wno-writable-strings -Wno-unknown-pragmas
 CLANGFLAGS := $(INCLUDES) -target wasm32 -nostdlib -flto -fshort-wchar
 CLANGFLAGS += -fvisibility=hidden -fno-builtin -fno-exceptions -fno-threadsafe-statics
@@ -75,7 +75,7 @@ $(JS): build.hxml $(wildcard src/*.hx src/**/*.hx)
 
 # libgme.a
 $(LIBGME): $(CXXOBJS)
-	@$(AR) rcs $@ $^
+	@$(AR) rcs $@ $?
 	@echo Archived $@
 
 # mkdir
@@ -90,5 +90,5 @@ $(OBJDIR)/%.o: %.cpp
 	@echo Compile $(notdir $<) TO $@
 
 $(OBJDIR)/glue.o: $(GMEDIR)/glue.c
-	@$(CC) $(CLANGFLAGS) $(CCFLAGS) -c $< -o $@
+	@$(CC) $(CLANGFLAGS) $(CFLAGS) -c $< -o $@
 	@echo Compile $(notdir $<) TO $@
