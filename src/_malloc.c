@@ -31,14 +31,14 @@ extern size_t __builtin_wasm_memory_grow(int index, size_t number);
 
 struct tag {
 	int size;
-	void* __data__[0];
+	char __data__[0];
 };
 
 #define TAG_BYTES(ptag)   ((ptag)->size + sizeof(struct tag))
 #define TAG_OF_ALLOC(ptr) (container_of(ptr, struct tag, __data__))
-#define TAG_DATABPTR(tag) ((unsigned char*)&(tag)->__data__)
+#define TAG_DATABPTR(tag) ((unsigned char*)(tag)->__data__)
 #define TAG_DATASIZE(tag) ((tag)->size)
-#define FREE_NEXT(tag)    ((tag)->__data__[0])
+#define FREE_NEXT(tag)    (*(void**)(tag)->__data__)
 #define FREE_ROOT(idx)    (root.FL[idx])
 #define FREE_MAX          (12)
 #define BLK_BASE          ( 8)
