@@ -72,12 +72,12 @@ float  scalbnf(float x, int i);
 float  scalblnf(float x, int l);
 
 // Power functions
-// #define sqrt(x)                __builtin_sqrt(x)
-// #define sqrtf(x)               __builtin_sqrtf(x)
-double pow(double x, double y);
+//// double sqrt(double)
+//// float  sqrtf(float)
+//// double pow(double, double)
+//// float  powf(float, float)
 double cbrt(double x);
 double hypot(double x, double y);
-float  powf(float x, float y);
 float  cbrtf(float x);
 float  hypotf(float x, float y);
 
@@ -92,16 +92,17 @@ float  tgammaf(float x);
 float  lgammaf(float x);
 
 // Rounding and remainder functions
-// #define ceil(x)                __builtin_ceil(x)
-// #define ceilf(x)               __builtin_ceilf(x)
-// #define floor(x)               __builtin_floor(x)
-// #define floorf(x)              __builtin_floorf(x)
-// #define trunc(x)               __builtin_trunc(x)
-// #define truncf(x)              __builtin_truncf(x)
-// #define rint(x)                __builtin_rint(x)
-// #define rintf(x)               __builtin_rintf(x)
-// #define nearbyint(x)           __builtin_nearbyint(x)
-// #define nearbyintf(x)          __builtin_nearbyintf(x)
+//// double ceil(double)
+//// float  ceilf(float)
+//// double floor(double);
+//// float  floorf(float)
+//// double trunc(double);
+////  float truncf(float);
+//// double rint(double);
+////  float rintf(float);
+//// double nearbyint(double);
+////  float nearbyintf(float);
+
 double fmod(double x, double y);
 double round(double x);
 double lround(double x);
@@ -120,12 +121,12 @@ float  remainderf(float x, float y);
 float  remquof(float x, float y, int* quot);
 
 // Floating-point manipulation functions
-// #define copysign(x, y)         __builtin_copysign(x, y)
-// #define copysignf(x, y)        __builtin_copysignf(x, y)
+//// double copysign(double, double);
+//// float  copysignf(float, float);
 double nan(const char* tag);
 double nextafter(double x, double y);
 double nexttoward(double x, long double y);
-float	nanf(const char* tag);
+float  nanf(const char* tag);
 float  nextafterf(float x, float y);
 float  nexttowardf(float x, long double y);
 
@@ -172,9 +173,10 @@ C_FUNCTION_END
 // scalbln(x, l)               c++11
 
 // Power functions
-// #define pow(x, y)           TODO
 #define sqrt(x)                __builtin_sqrt(x)
 #define sqrtf(x)               __builtin_sqrtf(x)
+#define pow(x, y)              __builtin_pow(x, y)
+#define powf(x, y)             __builtin_powf(x, y)
 // cbrt(x)                     c++11
 // hypot(x, y)                 c++11
 
