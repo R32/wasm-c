@@ -74,8 +74,8 @@ float  scalblnf(float x, int l);
 // Power functions
 //// double sqrt(double)
 //// float  sqrtf(float)
-//// double pow(double, double)
-//// float  powf(float, float)
+double pow(double, double);
+float  powf(float, float);
 double cbrt(double x);
 double hypot(double x, double y);
 float  cbrtf(float x);
@@ -175,8 +175,6 @@ C_FUNCTION_END
 // Power functions
 #define sqrt(x)                __builtin_sqrt(x)
 #define sqrtf(x)               __builtin_sqrtf(x)
-#define pow(x, y)              __builtin_pow(x, y)
-#define powf(x, y)             __builtin_powf(x, y)
 // cbrt(x)                     c++11
 // hypot(x, y)                 c++11
 

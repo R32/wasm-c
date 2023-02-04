@@ -244,12 +244,11 @@ OLM_DLLEXPORT double	log(double);
 OLM_DLLEXPORT double	log10(double);
 OLM_DLLEXPORT double	modf(double, double *);	/* fundamentally !__pure2 */
 
-// OLM_DLLEXPORT double	pow(double, double);
+OLM_DLLEXPORT double	pow(double, double);
 // OLM_DLLEXPORT double	sqrt(double);
 // OLM_DLLEXPORT double	ceil(double);
 // OLM_DLLEXPORT double	fabs(double) __pure2;
 // OLM_DLLEXPORT double	floor(double);
-#define pow(x, y)       __builtin_pow(x, y)
 #define sqrt(x)         __builtin_sqrt(x)
 #define ceil(x)         __builtin_ceil(x)
 #define fabs(x)         __builtin_fabs(x)
@@ -364,12 +363,11 @@ OLM_DLLEXPORT float	log1pf(float);
 OLM_DLLEXPORT float	log2f(float);
 OLM_DLLEXPORT float	logf(float);
 OLM_DLLEXPORT float	modff(float, float *);	/* fundamentally !__pure2 */
-//// OLM_DLLEXPORT float	powf(float, float);
+OLM_DLLEXPORT float	powf(float, float);
 //// OLM_DLLEXPORT float	sqrtf(float);
 //// OLM_DLLEXPORT float	ceilf(float);
 //// OLM_DLLEXPORT float	fabsf(float) __pure2;
 //// OLM_DLLEXPORT float	floorf(float);
-#define powf(x, y)          __builtin_powf(x, y)
 #define sqrtf(x)            __builtin_sqrtf(x)
 #define ceilf(x)            __builtin_ceilf(x)
 #define fabsf(x)            __builtin_fabsf(x)
