@@ -8,27 +8,6 @@
 #include "stddef.h"
 #include "_javascript_call.h"
 
-/**
- The starting position of the heap, uses `&__heap_base` to get its value
-*/
-extern const int __heap_base;
-
-/**
- index : wasm currently only uses one memory block, so the value of index is "0"
-
- return: The page size of the memory (each one is 64KiB)
-*/
-extern size_t __builtin_wasm_memory_size(int index);
-
-/**
- index : 0
-
- number: The number of pages you want to grow the memory by (each one is 64KiB in size).
-
- return: The previous page size of the memory.
-*/
-extern size_t __builtin_wasm_memory_grow(int index, size_t number);
-
 struct tag {
 	int size;
 	char __data__[0];
