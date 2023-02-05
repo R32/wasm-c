@@ -109,10 +109,19 @@ class TypedExports {
 		var cdef = {
 			isExtern : true,
 			pack : ["_wasm"],
+			meta : [{name : ":forward", pos : pos}],
 			name : "W" + path.file,
-			kind : TDClass(null, [], false, true, false),
-			pos  : expr.pos,
-			fields : fields,
+			kind : TDAbstract(TAnonymous(fields)),
+			pos  : pos,
+			fields : [{
+				name : "new",
+				access : [AInline, APublic],
+				kind : FFun({
+					args : [{name : "inst", type : macro :js.lib.WebAssembly.WebAssemblyInstantiatedSource}],
+					expr : macro this = cast inst.instance.exports,
+				}),
+				pos : pos,
+			}],
 		};
 		var fullname = cdef.pack.join(".") + "." + cdef.name;
 		Context.defineModule(fullname, [cdef]);
@@ -142,7 +151,8 @@ extern class TypedExports<Const> {
 e.g:
 
 ```haxe
-@:eager typedef MyExports = wasm.TypedExports<"bin/app.wasm">;
-```
+typedef MyExports = wasm.TypedExports<"bin/app.wasm">;
 
+var clib = new MyExports(inst); // inst is js.lib.WebAssembly.WebAssemblyInstantiatedSource
+```
 */

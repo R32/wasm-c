@@ -40,7 +40,7 @@ class FMS {
 		if (cmem == null)
 			cmem = cast inst.exports.memory;
 		defProc(J_MEMGROW, 0, 0);
-		CStub.select(cast inst.exports, this);
+		CStub.select(inst.exports, this);
 		return moi;
 	}
 
