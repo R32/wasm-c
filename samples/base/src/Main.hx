@@ -1,26 +1,32 @@
 package;
 
 import js.lib.WebAssembly;
-import js.lib.webassembly.Module;
-import js.lib.webassembly.Instance;
-import js.Browser.console;
+import js.wasm.FMS;
+
+typedef MyExports = wasm.TypedExports<"bin/app.wasm">;
 
 class Main {
 	static function main() {
 		var buffer = haxe.Resource.getBytes("wasm").getData();
 		if (!WebAssembly.validate(buffer))
 			return;
-		var mod = new Module(buffer);
-		var lib = new Instance(mod, {
+		FMS.init(buffer, {
 			env : {
-				log: function(a, b, c) {
-					console.log('dataEnd: $a, heapBase: $b, stackSize: $c');
-				}
+				trace : (console : Dynamic).log, // prevent haxe $bind
+				rand : Std.random,
+				frand : Math.random,
+				stamp: performance.now,
+				js_sqrt: Math.sqrt,
 			}
+		}).then(function(inst) {
+			var clib = new MyExports(inst);
+			console.log(clib.square(10));
+			clib.test();
 		});
-		var clib = lib.exports;
-		js.Lib.global.lib = clib;
-		trace(clib.square(10));
-		trace(clib.test("c".code));
 	}
 }
+
+@:native("window") extern var window : js.html.Window;
+@:native("document") extern var document : js.html.Document;
+@:native("console") extern var console : js.html.ConsoleInstance;
+@:native("performance") extern var performance : js.html.Performance;
