@@ -15,7 +15,8 @@ class Reader {
 
 	public function run( r ) {
 		src = r;
-		readWASM();
+		try readWASM() catch (e : haxe.io.Eof) {}
+		src = null;
 	}
 
 	function readWASM() {

@@ -194,6 +194,7 @@ enum abstract SId(Int) {
 	var SElem;
 	var SCode;
 	var SData;
+	var SDataCount;
 
 	public function toString() : String {
 		return switch(cast this) {
@@ -209,6 +210,7 @@ enum abstract SId(Int) {
 			case SElem:     "Elem";
 			case SCode:     "Code";
 			case SData:     "Data";
+			case SDataCount:"DataCount";
 		}
 	}
 }
@@ -249,6 +251,9 @@ enum abstract ValueType(Int) {
 	var I64 = 0x7e;
 	var F32 = 0x7d;
 	var F64 = 0x7c;
+	var V128 = 0x7b;
+	var Funcref = 0x70;
+	var Externref = 0x6f;
 
 	public function toString() {
 		return switch(cast this) {
@@ -256,6 +261,9 @@ enum abstract ValueType(Int) {
 		case I64: "i64";
 		case F32: "f32";
 		case F64: "f64";
+		case V128: "v128";
+		case Funcref: "funcref";
+		case Externref: "externref";
 		}
 	}
 }
