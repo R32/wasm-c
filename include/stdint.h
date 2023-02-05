@@ -6,7 +6,7 @@
 #define _STDINT_H    1
 
 // Types
-#if __x86_64__
+#if __LP64__
   typedef long long  intptr_t;
 #else
   typedef long       intptr_t;
@@ -25,7 +25,7 @@ typedef short        int_least16_t;
 typedef int          int_least32_t;
 typedef int64_t      int_least64_t;
 
-#if __x86_64__
+#if __LP64__
   typedef unsigned long long  uintptr_t;
 #else
   typedef unsigned long       uintptr_t;
@@ -48,7 +48,7 @@ typedef          uint64_t     uint_least64_t;
 #define INT8_C(c)        c
 #define INT16_C(c)       c
 #define INT32_C(c)       c
-#if __x86_64__
+#if __LP64__
   #define INT64_C(c)     c ## L
 #else
   #define INT64_C(c)     c ## LL
@@ -57,13 +57,13 @@ typedef          uint64_t     uint_least64_t;
 #define UINT8_C(c)       c
 #define UINT16_C(c)      c
 #define UINT32_C(c)      c ## U
-#if __x86_64__
+#if __LP64__
 #  define UINT64_C(c)    c ## UL
 #else
 #  define UINT64_C(c)    c ## ULL
 #endif
 
-#if __x86_64__
+#if __LP64__
 #  define INTMAX_C(c)    c ## L
 #  define UINTMAX_C(c)   c ## UL
 #else
@@ -118,7 +118,7 @@ typedef          uint64_t     uint_least64_t;
 #define UINT_FAST32_MAX  (4294967295U)
 #define UINT_FAST64_MAX  (UINT64_C(18446744073709551615))
 
-#if __x86_64__
+#if __LP64__
 #  define INTPTR_MIN     (-9223372036854775807L-1)
 #  define INTPTR_MAX     (9223372036854775807L)
 #  define UINTPTR_MAX    (18446744073709551615UL)
@@ -133,7 +133,7 @@ typedef          uint64_t     uint_least64_t;
 #define INTMAX_MAX       (INT64_C(9223372036854775807))
 #define UINTMAX_MAX      (UINT64_C(18446744073709551615))
 
-#if __x86_64__
+#if __LP64__
 #  define PTRDIFF_MIN    (-9223372036854775807L-1)
 #  define PTRDIFF_MAX    (9223372036854775807L)
 #  define SIZE_MAX       (18446744073709551615UL)

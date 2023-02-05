@@ -20,7 +20,7 @@
 #define INT_MIN      (-INT_MAX - 1)
 #define UINT_MAX     (4294967295U)
 
-#if __x86_64__
+#if __LP64__
 #  define LONG_MAX   (9223372036854775807L)
 #  define ULONG_MAX  (18446744073709551615UL)
 #else

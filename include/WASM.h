@@ -6,6 +6,10 @@
 #define _WASM_H    1
 #include <stddef.h>
 
+#ifdef __LP64__
+#error WASM64 is not currently supported
+#end
+
 #ifndef EM_EXPORT
 #  define EM_EXPORT(name)  __attribute__((used, export_name(#name)))
 #endif

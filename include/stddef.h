@@ -5,7 +5,7 @@
 #ifndef _STDDEF_H
 #define _STDDEF_H    1
 
-#if __x86_64__
+#if __LP64__
   typedef unsigned long long   size_t;
   typedef long long            ptrdiff_t;
 #else
