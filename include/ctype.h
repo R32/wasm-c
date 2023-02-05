@@ -1,6 +1,6 @@
 /*
-* SPDX-License-Identifier: GPL-2.0
-*/
+ * SPDX-License-Identifier: GPL-2.0
+ */
 #ifndef _CTYPE_H
 #define _CTYPE_H    1
 

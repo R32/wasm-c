@@ -1,8 +1,8 @@
 /*
-* (c)2021 Liu WeiMin
-*
-* SPDX-License-Identifier: GPL-2.0
-*/
+ * (c)2021 Liu WeiMin
+ *
+ * SPDX-License-Identifier: GPL-2.0
+ */
 #include "_builtin.h"
 #include "_malloc.h"
 #include "stddef.h"

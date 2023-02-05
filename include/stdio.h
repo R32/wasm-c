@@ -1,6 +1,6 @@
 /*
-* SPDX-License-Identifier: GPL-2.0
-*/
+ * SPDX-License-Identifier: GPL-2.0
+ */
 
 #ifndef _STDIO_H
 #define _STDIO_H    1

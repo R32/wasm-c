@@ -1,6 +1,6 @@
 /*
-* SPDX-License-Identifier: GPL-2.0
-*/
+ * SPDX-License-Identifier: GPL-2.0
+ */
 
 #ifndef __CDEFS_H
 #define __CDEFS_H    1

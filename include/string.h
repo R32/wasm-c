@@ -1,6 +1,6 @@
 /*
-* SPDX-License-Identifier: GPL-2.0
-*/
+ * SPDX-License-Identifier: GPL-2.0
+ */
 #ifndef _STRING_H
 #define _STRING_H    1
 #include "stddef.h"

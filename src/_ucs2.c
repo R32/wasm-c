@@ -1,6 +1,6 @@
 /*
-* SPDX-License-Identifier: GPL-2.0
-*/
+ * SPDX-License-Identifier: GPL-2.0
+ */
 
 #include "_ucs2.h"
 #include "stddef.h"

@@ -1,6 +1,6 @@
 /*
-* SPDX-License-Identifier: GPL-2.0
-*/
+ * SPDX-License-Identifier: GPL-2.0
+ */
 
 #ifndef _JAVASCRIPT_CALL_H
 #define _JAVASCRIPT_CALL_H    1
@@ -8,7 +8,7 @@
 
 enum JS_MESSAGE {
 	J_ASSERT = 9, // reserve 0~8
-	J_ABORT, 
+	J_ABORT,
 	J_MEMGROW,
 	J_PUTCHAR,
 };
