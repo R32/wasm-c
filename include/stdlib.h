@@ -20,6 +20,9 @@
 #define atoi(s)                      atol(s)
 #define atof(str)                    strtod(str, NULL)
 
+#define exit(status)                 js_sendmsg(J_ABORT, status, 0);
+#define abort()                      js_sendmsg(J_ABORT, -2, 0);
+
 C_FUNCTION_BEGIN
 // int wctomb (char* pmb, wchar_t wc);
 // int mbtowc (wchar_t* pwc, const char* pmb, size_t max);

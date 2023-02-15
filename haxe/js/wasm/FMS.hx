@@ -256,7 +256,7 @@ class FMS {
 			throw new js.lib.Error(s);
 		#end
 		case J_ABORT:
-			throw new js.lib.Error("" + wparam);
+			throw wparam;
 		case J_MEMGROW:
 			view = new DataView(cmem.buffer);
 			vu8 = new Uint8Array(cmem.buffer);
