@@ -36,8 +36,8 @@ clean:
 .PHONY: clean all
 
 # Global compiler flags
-CFLAGS      := -Ofast -std=c99 -nostdinc
-CXXFLAGS    := -Ofast -std=c++11 -nostdinc++ -fno-rtti -Wno-writable-strings -Wno-unknown-pragmas
+CFLAGS      := -O3 -std=c99 -nostdinc
+CXXFLAGS    := -O3 -std=c++11 -nostdinc++ -fno-rtti -Wno-writable-strings -Wno-unknown-pragmas
 
 # Global compiler flags for Wasm targeting
 CLANGFLAGS  := $(INCLUDES) -target wasm32 -nostdlib -flto -D__EMSCRIPTEN__ -fshort-wchar

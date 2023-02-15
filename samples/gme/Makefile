@@ -46,8 +46,8 @@ OBJDIR     := $(GMEDIR)/obj
 CXXFILES   := $(notdir $(wildcard $(SOURCES)/*.cpp))
 CXXOBJS    := $(CXXFILES:%.cpp=$(OBJDIR)/%.o)
 
-CFLAGS     := -Ofast -std=c99 -nostdinc
-CXXFLAGS   := -Ofast -std=c++11 -nostdinc++ -fno-rtti -Wno-writable-strings -Wno-unknown-pragmas
+CFLAGS     := -O3 -std=c99 -nostdinc
+CXXFLAGS   := -O3 -std=c++11 -nostdinc++ -fno-rtti -Wno-writable-strings -Wno-unknown-pragmas
 CLANGFLAGS := $(INCLUDES) -target wasm32 -nostdlib -flto -fshort-wchar
 CLANGFLAGS += -fvisibility=hidden -fno-builtin -fno-exceptions -fno-threadsafe-statics
 # -D
