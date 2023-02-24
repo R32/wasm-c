@@ -69,3 +69,47 @@ wchar_t* wcsrchr(const wchar_t* ws, wchar_t c) {
 	}
 	return NULL;
 }
+
+wchar_t* wcsstr(const wchar_t* str, const wchar_t* sub) {
+	if (*sub == 0)
+		return (wchar_t*) str;
+	const wchar_t* a;
+	const wchar_t* b = sub;
+	for(; *str; str++) {
+		if (*str != *b)
+			continue;
+		a = str;
+		while(1) {
+			if (*b == 0)
+				return (wchar_t*) str;
+			if (*a++ != *b++)
+				break;
+		}
+		b = sub;
+	}
+	return NULL;
+}
+
+int wmemcmp(const wchar_t* v1, const wchar_t* v2, size_t n) {
+	const wchar_t *l = v1, *r = v2;
+	while(n && *l == *r) {
+		n--;
+		l++;
+		r++;
+	}
+	return n ? *l - *r : 0;
+}
+
+#include "_ucs2.h"
+#include "printf.h"
+int swprintf(wchar_t *buffer, size_t bufsz, const wchar_t *format, ...)
+{
+	va_list va;
+	va_start(va, format);
+	char tmp[bufsz * 2];
+	wcsto_u((char *)buffer, format, bufsz * 2);
+	int len = vsnprintf_(tmp, bufsz, (const char *)buffer, va);
+	va_end(va);
+	u_towcs(buffer, tmp, bufsz);
+	return len;
+}

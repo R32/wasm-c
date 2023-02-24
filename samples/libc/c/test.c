@@ -164,6 +164,13 @@ static void t_memcpy() {
 	memmove(ph + len, ph, len);
 	assert(memcmp(ph + len, cstr, len) == 0);
 
+	// wchar.h
+	const wchar_t *wcs = L"ABCD EFGH IJKL MNOP QRST";
+	assert(wcslen(wcs) == len);
+	wmemcpy(p1, wcs, len + 1);
+	assert(wmemcmp((wchar_t *)p1, wcs, len) == 0);
+	assert(wcsstr(wcs, L"IJKL") == (wcs + 10));
+
 	free(p1);
 }
 

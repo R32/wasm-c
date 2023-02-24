@@ -35,16 +35,21 @@ wchar_t* wcsncpy (wchar_t* destination, const wchar_t* source, size_t num);
 // wchar_t* wcspbrk (const wchar_t* wcs1, const wchar_t* wcs2);
 wchar_t* wcsrchr (const wchar_t* ws, wchar_t wc);
 // size_t wcsspn (const wchar_t* wcs1, const wchar_t* wcs2);
-// wchar_t* wcsstr (const wchar_t* wcs1, const wchar_t* wcs2);
+wchar_t* wcsstr (const wchar_t* wcs1, const wchar_t* wcs2);
 // wchar_t* wcstok (wchar_t* wcs, const wchar_t* delimiters, wchar_t** p);
 // size_t wcsxfrm (wchar_t* destination, const wchar_t* source, size_t num);
 
 // wchar_t* wmemchr (const wchar_t* ptr, wchar_t wc, size_t num);
-// int wmemcmp (const wchar_t* ptr1, const wchar_t* ptr2, size_t num);
+int wmemcmp (const wchar_t* ptr1, const wchar_t* ptr2, size_t num);
 // wchar_t* wmemcpy (wchar_t* destination, const wchar_t* source, size_t num);
 // wchar_t* wmemmove (wchar_t* destination, const wchar_t* source, size_t num);
 // wchar_t* wmemset (wchar_t* ptr, wchar_t wc, size_t num);
 
+int swprintf(wchar_t *buffer, size_t bufsz, const wchar_t *format, ...);
+
+#include "string.h"
+#define wmemcpy(dst, src, num)     ((wchar_t*)memcpy(dst, src, (num) * sizeof(wchar_t)))
+#define wmemmove(dst, src, num)    ((wchar_t*)memmove(dst, src, (num) * sizeof(wchar_t)))
 
 
 // wint_t btowc (int c);

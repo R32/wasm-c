@@ -9,8 +9,7 @@
 // Copying
 
 #define NOT_ALIGN(p) ((uintptr_t)(p) & (sizeof(int)-1))
-
-EM_EXPORT(memcpy) void* memcpy(void* dst, const void* src, size_t n) {
+void* memcpy(void* dst, const void* src, size_t n) {
 	char *d = dst;
 	const char *s = src;
 
@@ -103,8 +102,7 @@ char* strncat(char* dst, const char* src, size_t n) {
 }
 
 //// Comparison:
-
-EM_EXPORT(memcmp) int memcmp(const void* v1, const void* v2, size_t n) {
+int memcmp(const void* v1, const void* v2, size_t n) {
 	const unsigned char *l = v1, *r = v2;
 	while(n && *l == *r) {
 		n--;
@@ -228,8 +226,7 @@ char* strstr(const char* str, const char* sub) {
 }
 
 //// Other:
-
-EM_EXPORT(memset) void *memset(void *dst, int c, size_t n) {
+void *memset(void *dst, int c, size_t n) {
 	c = (char)c;
 	char *d = dst;
 	int c32 = c | c << 8 | c << 16 | c << 24;

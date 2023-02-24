@@ -20,7 +20,12 @@ struct tag {
 #define FREE_NEXT(tag)    (*(void**)(tag)->__data__)
 #define FREE_ROOT(idx)    (root.FL[idx])
 #define FREE_MAX          (12)
-#define BLK_BASE          ( 8)
+
+#if defined(__wasm_simd128__ ) || defined(__LP64__)
+#   define BLK_BASE       (16)
+#else
+#   define BLK_BASE       ( 8)
+#endif
 
 #define PAGE_SIZE         (1024 * 64)
 // This aligns the "ptr" returned by "malloc"
@@ -88,7 +93,6 @@ static struct tag* fl_get(int size) {
 }
 
 #define GROW_EXTRA    1
-
 EM_EXPORT(malloc) void* malloc(int size) {
 	size = sz_align(size + sizeof(struct tag));
 	struct tag* tag = fl_get(size);
@@ -131,6 +135,10 @@ static inline void freetag(struct tag* tag) {
 EM_EXPORT(realloc) void* realloc(void* ptr, int size) {
 	if (ptr == NULL)
 		return malloc(size);
+	if (size <= 0) {
+		free(ptr);
+		return NULL;
+	}
 	if ((size_t)ptr < memory_base() || NOT_ALIGNED((size_t)ptr, BLK_BASE))
 		return NULL;
 

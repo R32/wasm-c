@@ -17,12 +17,11 @@
 // printf, sprintf, snprintf, vsnprintf, vprintf
 #include "printf.h"
 
-
 // None of the following functions have been implemented
-typedef long             FILE;
-#define stdout           0
-#define stderr           1
-#define stdin            2
+typedef size_t           FILE;
+#define stdout           (FILE *)(size_t)0
+#define stderr           (FILE *)(size_t)1
+#define stdin            (FILE *)(size_t)2
 #define SEEK_SET         0
 #define SEEK_CUR         1
 #define SEEK_END         2
