@@ -11,15 +11,16 @@ class GmeWorker extends AudioWorkletProcessor {
 		};
 		_$FMS.init(opt.processorOptions.wasm,{ }).then(function(moi) {
 			_gthis.ptr16 = __lib.malloc(512);
-			_gthis.abi16 = new Int16Array(__fms.cmem.buffer,_gthis.ptr16,256);
 			let this1 = __lib.nsf_new(sampleRate);
 			_gthis.gme = this1;
 			__lib.gme_set_stereo_depth(_gthis.gme,1.0);
+			_gthis.nsfptr = __lib.malloc(131072);
 			_gthis.loadNsf(opt.processorOptions.nsf);
 		});
 	}
 	loadNsf(nsf) {
-		let ptr = __lib.malloc(nsf.byteLength);
+		this.nsfptr = __lib.realloc(this.nsfptr,nsf.byteLength);
+		let ptr = this.nsfptr;
 		__fms.writeBuffs(ptr,nsf,nsf.byteLength);
 		let hnsf = ptr;
 		if(__fms.view.getInt32(hnsf,true) != 1297302862) {
@@ -34,7 +35,7 @@ class GmeWorker extends AudioWorkletProcessor {
 		}
 		let value = { intro : intro, count : __fms.vu8[hnsf + 6], game : __fms.readUTF8(hnsf + 14,32), copyright : __fms.readUTF8(hnsf + 78,32), author : __fms.readUTF8(hnsf + 46,32)};
 		this.port.postMessage({ type : 13, value : value});
-		__lib.free(ptr);
+		this.abi16 = new Int16Array(__fms.cmem.buffer,this.ptr16,256);
 	}
 	onMessage(me) {
 		let m = me.data;

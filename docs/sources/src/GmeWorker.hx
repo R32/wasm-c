@@ -18,17 +18,18 @@ class GmeWorker extends AudioWorkletProcessor {
 	var connecting : Bool;
 	var volume(default, set) : Float;
 	var vol : Float;
+	var nsfptr : Ptr;
 
 	function new(opt) {
 		super(opt);
 		volume = 1.0;
 		tellTime = endedTime = 0.;
 		port.onmessage = FUNC(onMessage);
-		FMS.init(opt.processorOptions.wasm,{}).then(function(moi) {
+		FMS.init(opt.processorOptions.wasm, {}).then(function(moi) {
 			ptr16 = lib.malloc(FRAME_COUNT * CHANNEL * 2);
-			abi16 = new Int16Array(fms.cmem.buffer, ptr16, FRAME_COUNT * CHANNEL);
 			gme = new Gme(cast sampleRate);
 			gme.stereo(1.0);
+			nsfptr = lib.malloc(128 * 1024);
 			loadNsf(opt.processorOptions.nsf);
 		});
 	}
@@ -37,7 +38,8 @@ class GmeWorker extends AudioWorkletProcessor {
 		port.postMessage({type: type, value: value});
 
 	function loadNsf( nsf : ArrayBuffer ) {
-		var ptr = lib.malloc(nsf.byteLength);
+		nsfptr = lib.realloc(nsfptr, nsf.byteLength); // for reduces memory fragments
+		var ptr = nsfptr;
 		fms.writeBuffs(ptr, nsf, nsf.byteLength);
 		var hnsf : NsfHeader = cast ptr; // powered by haxe macro;
 		if (hnsf.sign != SIGN_NSF) {
@@ -56,7 +58,7 @@ class GmeWorker extends AudioWorkletProcessor {
 			copyright : hnsf.copyright,
 			author : hnsf.author,
 		});
-		lib.free(ptr);
+		abi16 = new Int16Array(fms.cmem.buffer, ptr16, FRAME_COUNT * CHANNEL);
 	}
 
 	function onMessage( me : MessageEvent ) {
