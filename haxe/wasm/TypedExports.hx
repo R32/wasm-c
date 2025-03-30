@@ -58,7 +58,7 @@ class TypedExports {
 			}
 		}
 		var fields = [];
-		var ctGlobal = macro :js.lib.wasm.Global;
+		var ctGlobal = macro :js.lib.webassembly.Global;
 		var ctMemory = macro :js.lib.webassembly.Memory;
 		for (n in exports) {
 			var kind = switch(n.kind) {
