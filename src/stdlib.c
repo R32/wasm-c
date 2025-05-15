@@ -7,10 +7,11 @@
 #include "string.h"
 #include "math.h"
 
-/**
- simple strtod
-*/
-double strtod (const char* restrict s, char** restrict endptr) {
+/*
+ * simple strtod
+ */
+double strtod (const char *restrict s, char **restrict endptr)
+{
 	while(isspace(*s))
 		s++;
 	int neg = 0;
@@ -53,7 +54,8 @@ double strtod (const char* restrict s, char** restrict endptr) {
 	return neg ? -value : value;
 }
 
-long atol(const char* s) {
+long atol(const char *s)
+{
 	long n = 0;
 	int neg = 0;
 	while (isspace(*s))
@@ -68,9 +70,10 @@ long atol(const char* s) {
 	return neg ? n : -n;
 }
 
-typedef int (*compar)(const void*,const void*);
+typedef int (*compare)(const void*,const void*);
 
-void* bsearch (const void* key, const void* base, size_t num, size_t size, compar cmp) {
+void *bsearch (const void *key, const void *base, size_t num, size_t size, compare cmp)
+{
 	void* pivot;
 	int sign;
 	while(num > 0) {
@@ -91,20 +94,22 @@ void* bsearch (const void* key, const void* base, size_t num, size_t size, compa
 // base + i * size
 #define BIS(i)        ((char*)base + (i) * size)
 #define BISCMP(x, y)  cmp(BIS(x), BIS(y))
-static void inline st_swap(void* a, void* b, void* t, size_t size) {
+static void inline st_swap(void *a, void *b, void *t, size_t size)
+{
 	if (a == b)
 		return;
 	memcpy(t, a, size);
 	memcpy(a, b, size);
 	memcpy(b, t, size);
 }
-/**
- This function takes last element as pivot,
- places the pivot element at its correct position in sorted array,
- and places all smaller (smaller than pivot) to left of pivot
- and all greater elements to right of pivot
-*/
-static int st_partition(void* base, int low, int high, size_t size, compar cmp) {
+/*
+ * This function takes last element as pivot,
+ * places the pivot element at its correct position in sorted array,
+ * and places all smaller (smaller than pivot) to left of pivot
+ * and all greater elements to right of pivot
+ */
+static int st_partition(void *base, int low, int high, size_t size, compare cmp)
+{
 	char t[size];
 	int pivot = high;
 	// Index of smaller element and indicates the right position of pivot found so far
@@ -120,19 +125,18 @@ static int st_partition(void* base, int low, int high, size_t size, compar cmp) 
 	st_swap(BIS(i + 1), BIS(high), t, size);
 	return i + 1;
 }
-static void st_inner(void* base, int low, int high, size_t size, compar cmp) {
+static void st_inner(void *base, int low, int high, size_t size, compare cmp)
+{
 	if (low < high) {
 		int pi = st_partition(base, low, high, size, cmp);
 		st_inner(base, low, pi - 1, size, cmp);
 		st_inner(base, pi + 1, high, size, cmp);
 	}
 }
-/**
- Copied from https://www.geeksforgeeks.org/quick-sort/
-
- Maybe we can move `size` and `cmp` out as STATIC to reduce stack data
- which will prevent stack overflow as much as possible
-*/
-void qsort(void* base, size_t num, size_t size, compar cmp) {
+/*
+ * Copied from https://www.geeksforgeeks.org/quick-sort/
+ */
+void qsort(void *base, size_t num, size_t size, compare cmp)
+{
 	st_inner(base, 0, num - 1, size, cmp);
 }

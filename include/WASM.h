@@ -14,6 +14,8 @@
 #  define EM_EXPORT(name)  __attribute__((used, export_name(#name)))
 #endif
 
+#define EM_KEEP            __attribute__((used))
+
 #ifndef EM_IMPORT
 #  define EM_IMPORT(NAME)  __attribute__((import_module("env"), import_name(#NAME)))
 #endif

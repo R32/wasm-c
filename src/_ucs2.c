@@ -5,12 +5,12 @@
 #include "_ucs2.h"
 #include "stddef.h"
 
-/**
- wchar_t* to UTF8
-
- @param max: Maximum number of bytes to be written to dest.
-*/
-int wcsto_u(char* dst, const wchar_t* src, size_t max) {
+/*
+ * wchar_t* to UTF8
+ *
+ * @param max: Maximum number of bytes to be written to dest.
+ */
+int wcsto_u(unsigned char *dst, const wchar_t *src, size_t max) {
 	int c;
 	size_t i = 0;
 	if (dst == NULL || max == 0) {
@@ -56,12 +56,12 @@ int wcsto_u(char* dst, const wchar_t* src, size_t max) {
 	return i;
 }
 
-/**
- UTF8 to wchar_t*
-
- @param max: maximum number of wchar_t characters to write to dest
-*/
-int u_towcs(wchar_t* dest, const char* src, size_t max) {
+/*
+ * UTF8 to wchar_t*
+ *
+ * @param max: maximum number of wchar_t characters to write to dest
+ */
+int u_towcs(wchar_t *dest, const unsigned char *src, size_t max) {
 	size_t acc = 0, c, c2, c3, c4;
 	if (dest == NULL || max == 0) {
 		while ((c = *src++)) {
@@ -89,8 +89,6 @@ int u_towcs(wchar_t* dest, const char* src, size_t max) {
 	}
 	while ((acc < max) && (c = *src++)) {
 		if (c < 0x80) {
-		} else if (c < 0xC0) {
-			break;
 		} else if (c < 0xE0) {
 			c2 = *src++;
 			if (!(c2 & 0x80))
